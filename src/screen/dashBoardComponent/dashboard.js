@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import styles from './styles';
@@ -18,17 +19,23 @@ import {API_URL} from '../../config';
 
 const Dashboard = () => {
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(true);
   const [empId, setEmpId] = useState('');
   const [superId, setSuperId] = useState('');
   const [superVisorList, setSuperVisorList] = useState([]);
-  const [dataList, setDataList] = useState([]);
-  const [leaveList, setLeaveList] = useState([]);
+  const [dataList, setDataList] = useState(null);
+  const [leaveList, setLeaveList] = useState(null);
+  const [wrkHoursList, setWrkHoursList] = useState(null);
 
   const getUserData = async () => {
-    const sprIdvalue = await AsyncStorage.getItem('supervisor_id');
-    const value = await AsyncStorage.getItem('userId');
-    setSuperId(sprIdvalue);
-    setEmpId(value);
+    try {
+      const sprIdvalue = await AsyncStorage.getItem('supervisor_id');
+      const value = await AsyncStorage.getItem('userId');
+      setSuperId(sprIdvalue);
+      setEmpId(value);
+    } catch (error) {
+      console.error('Error getting user data:', error);
+    }
   };
 
   useEffect(() => {
@@ -36,54 +43,40 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    axios({
-      url: `${API_URL}Find_Supervisor?supervisor_id=${superId}`,
-      method: 'get',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-      .then(response => {
-        if (response.data.error === 'false') {
-          setSuperVisorList(response.data.users);
-          // console.log(response.data.users);
-        }
-      })
-      .catch(error => console.log(error));
-
-    axios({
-      url: `${API_URL}Dashboard?empid=${empId}`,
-      method: 'get',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-      .then(response => {
-        if (response.data.status === true) {
-          setDataList(response.data.dash_resp);
-          // console.log(response.data.dash_resp);
-        }
-      })
-      .catch(error => console.log(error));
-
-    axios({
-      url: `${API_URL}Leave_Balances?empid=${empId}`,
-      method: 'get',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-      .then(response => {
-        if (response.data.status === true) {
-          setLeaveList(response.data.Leave_Balances_Data);
-          // console.log(response.data.Leave_Balances_Data);
-        }
-      })
-      .catch(error => console.log(error));
-  }, []);
+    if (superId && empId) {
+      setLoading(true);
+      axios
+        .all([
+          axios.get(`${API_URL}Find_Supervisor?supervisor_id=${superId}`),
+          axios.get(`${API_URL}Find_Working_hrs?emp_id=${empId}`),
+          axios.get(`${API_URL}Dashboard?empid=${empId}`),
+          axios.get(`${API_URL}Leave_Balances?empid=${empId}`),
+        ])
+        .then(
+          axios.spread(
+            (supervisorRes, workingHoursRes, dashboardRes, leaveRes) => {
+              if (supervisorRes.data.error === 'false') {
+                setSuperVisorList(supervisorRes.data.users);
+              }
+              if (workingHoursRes.data.error === 'false') {
+                setWrkHoursList(workingHoursRes.data.Working_Hours_data);
+              }
+              if (dashboardRes.data.status === true) {
+                setDataList(dashboardRes.data.dash_resp);
+              }
+              if (leaveRes.data.status === true) {
+                setLeaveList(leaveRes.data.Leave_Balances_Data);
+              }
+              setLoading(false);
+            },
+          ),
+        )
+        .catch(error => {
+          console.error('Error fetching data:', error);
+          setLoading(false);
+        });
+    }
+  }, [superId, empId]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -103,22 +96,30 @@ const Dashboard = () => {
           <View style={{marginHorizontal: 10, justifyContent: 'center'}}>
             <Text style={styles.titleTxtStyle}>Welcome, Guest</Text>
             <Text style={styles.titleTxtStyle}>Employee Code : AU0055</Text>
-            {superVisorList && superVisorList.length > 0 ? (
+            {loading ? (
+              <View style={styles.loaderContainer}>
+                <ActivityIndicator size="small" color="#e61789" />
+              </View>
+            ) : superVisorList && superVisorList.length > 0 ? (
               <Text style={styles.titleTxtStyle}>
-                Supervisor : {superVisorList[0].name}
+                Supervisor: {superVisorList[0].name}
               </Text>
-            ) : (
-              <Text>No Supervisor data available</Text>
-            )}
+            ) : null}
           </View>
         </View>
         <ScrollView>
           <View style={styles.mainView}>
             <View style={styles.nextMainView}>
               <View style={styles.titleView}>
-                <Text style={{fontSize: 16, fontWeight: 500, color: 'white'}}>
-                  Working Hours: 00 hours 34 min
-                </Text>
+                {loading ? (
+                  <View style={styles.loaderContainer}>
+                    <ActivityIndicator size="small" color="#e61789" />
+                  </View>
+                ) : wrkHoursList && wrkHoursList.length > 0 ? (
+                  <Text style={{fontSize: 16, fontWeight: 500, color: 'white'}}>
+                    Total Working Hours: {wrkHoursList[0].total_time}
+                  </Text>
+                ) : null}
                 <TouchableOpacity>
                   <Text
                     style={{

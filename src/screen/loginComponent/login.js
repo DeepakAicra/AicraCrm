@@ -143,7 +143,7 @@ const Login = () => {
           )}
           {loading && (
             <View style={styles.loader}>
-              <ActivityIndicator size="large" color="#ffffff" />
+              <ActivityIndicator size="large" color="#e61789" />
             </View>
           )}
         </View>
