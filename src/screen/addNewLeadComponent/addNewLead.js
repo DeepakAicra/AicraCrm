@@ -14,7 +14,6 @@ import styles from './styles';
 import Header from '../../component/generalHeader/header';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Modal from 'react-native-modal';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {API_URL} from '../../config';
 

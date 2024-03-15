@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {
   KeyboardAvoidingView,
   ScrollView,
@@ -7,8 +7,8 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
-  SafeAreaView,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import styles from './styles';
@@ -23,6 +23,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [seePassword, setSeePassword] = useState(true);
   const [checkValidEmail, setCheckValidEmail] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleCheckEmail = text => {
     let re = /\S+@\S+\.\S+/;
@@ -41,29 +42,11 @@ const Login = () => {
     if (!isNonWhiteSpace.test(value)) {
       return 'Password must not contain Whitespaces.';
     }
-
-    const isContainsUppercase = /^(?=.*[A-Z]).*$/;
-    if (!isContainsUppercase.test(value)) {
-      return 'Password must have at least one Uppercase Character.';
-    }
-
-    const isContainsLowercase = /^(?=.*[a-z]).*$/;
-    if (!isContainsLowercase.test(value)) {
-      return 'Password must have at least one Lowercase Character.';
-    }
-
-    const isContainsNumber = /^(?=.*[0-9]).*$/;
-    if (!isContainsNumber.test(value)) {
-      return 'Password must contain at least one Digit.';
-    }
-    const isValidLength = /^.{8,16}$/;
-    if (!isValidLength.test(value)) {
-      return 'Password must be 8-16 Characters Long.';
-    }
     return null;
   };
 
   const handleLogin = () => {
+    setLoading(true);
     const checkPassword = checkPasswordValidity(password);
     if (!checkPassword) {
       let formData = new FormData();
@@ -79,18 +62,23 @@ const Login = () => {
         },
       })
         .then(response => {
+          setLoading(false);
           if (response.data.error === false) {
-            // console.log(response.data.error);
             AsyncStorage.setItem('userId', response.data.message.emp_id);
             AsyncStorage.setItem('loginId', response.data.message.id);
-            AsyncStorage.setItem('supervisor_id', response.data.message.supervisor_id);
+            AsyncStorage.setItem(
+              'supervisor_id',
+              response.data.message.supervisor_id,
+            );
             navigation.navigate('DrawerStack');
-          } else {
-            Alert.alert('Invalid Details !');
           }
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+          setLoading(false);
+          console.log(error);
+        });
     } else {
+      setLoading(false);
       Alert.alert(checkPassword);
     }
   };
@@ -141,9 +129,6 @@ const Login = () => {
               />
             </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={() => {}} style={styles.forgotView}>
-            <Text style={styles.forgotTxtStyle}>Forgot Password?</Text>
-          </TouchableOpacity>
           {email == '' || password == '' || checkValidEmail == true ? (
             <TouchableOpacity
               disabled
@@ -156,19 +141,11 @@ const Login = () => {
               <Text style={styles.buttonText}>Sign In</Text>
             </TouchableOpacity>
           )}
-          <TouchableOpacity onPress={() => {}} style={styles.googleButton}>
-            <Image
-              source={require('../../Assets/Images/google.png')}
-              style={{width: 18, height: 18, marginHorizontal: 10}}
-            />
-            <Text style={styles.buttonText}>Continue With Google</Text>
-          </TouchableOpacity>
-          <View style={styles.bottomViewStyle}>
-            <Text style={styles.bottomTxtStyle}>Don't have an account?</Text>
-            <TouchableOpacity onPress={() => {}}>
-              <Text style={styles.registerTxtStyle}>Sign Up</Text>
-            </TouchableOpacity>
-          </View>
+          {loading && (
+            <View style={styles.loader}>
+              <ActivityIndicator size="large" color="#ffffff" />
+            </View>
+          )}
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

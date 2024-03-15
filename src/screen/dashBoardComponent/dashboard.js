@@ -24,12 +24,11 @@ const Dashboard = () => {
   const [dataList, setDataList] = useState([]);
   const [leaveList, setLeaveList] = useState([]);
 
-  // console.log(superVisorList);
   const getUserData = async () => {
-    const value = await AsyncStorage.getItem('userId');
     const sprIdvalue = await AsyncStorage.getItem('supervisor_id');
-    setEmpId(value);
+    const value = await AsyncStorage.getItem('userId');
     setSuperId(sprIdvalue);
+    setEmpId(value);
   };
 
   useEffect(() => {

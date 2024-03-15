@@ -2,6 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import Splash from '../screen/splashComponent/splash';
 import Login from '../screen/loginComponent/login';
+import ForgotPassword from '../screen/forgotComponent/forgot';
 import DrawerStack from './DrawerNavigator';
 import TabStack from './BottomNavigator';
 import Dashboard from '../screen/dashBoardComponent/dashboard';
@@ -21,6 +22,7 @@ const AuthStack = () => {
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="Splash" component={Splash} />
       <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="DrawerStack" component={DrawerStack} />
       <Stack.Screen name="TabStack" component={TabStack} />
       <Stack.Screen name="Home" component={Dashboard} />
