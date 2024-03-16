@@ -20,7 +20,7 @@ const Account = ({navigation}) => {
   const [accountInfoList, setAccountInfoList] = useState([]);
   const [page, setPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(5);
-
+  
   const data = [
     {id: 1, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
     {id: 2, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
@@ -33,8 +33,12 @@ const Account = ({navigation}) => {
   ];
 
   const getUserData = async () => {
-    const value = await AsyncStorage.getItem('userId');
-    setEmpId(value);
+    try {
+      const value = await AsyncStorage.getItem('userId');
+      setEmpId(value);
+    } catch (error) {
+      console.log('Error fetching user data:', error);
+    }
   };
 
   useEffect(() => {
@@ -42,38 +46,27 @@ const Account = ({navigation}) => {
   }, []);
 
   useEffect(() => {
-    axios({
-      url: `${API_URL}Account_List?empid=${empId}`,
-      method: 'get',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-      .then(response => {
-        if (response.data.status === true) {
-          console.log(response.data.account_data);
-          setTableList(response.data.account_data);
-        }
-      })
-      .catch(error => console.log(error));
+    const fetchData = async () => {
+      try {
+        const [accountListResponse, accountInfoResponse] = await Promise.all([
+          axios.get(`${API_URL}Account_List?empid=${empId}`),
+          axios.get(`${API_URL}Account_Information?empid=${empId}`),
+        ]);
 
-    axios({
-      url: `${API_URL}Account_Information?empid=${empId}`,
-      method: 'get',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-      .then(response => {
-        if (response.data.error === false) {
-          setAccountInfoList(response.data.Account_Information);
-          // console.log(response.data.Account_Information);
+        if (accountListResponse.data.status === true) {
+          setTableList(accountListResponse.data.account_data);
         }
-      })
-      .catch(error => console.log(error));
-  }, []);
+
+        if (accountInfoResponse.data.error === false) {
+          setAccountInfoList(accountInfoResponse.data.Account_Information);
+        }
+      } catch (error) {
+        console.log('Error fetching account data:', error);
+      }
+    };
+
+    fetchData();
+  }, [empId]);
 
   return (
     <SafeAreaView style={styles.container}>

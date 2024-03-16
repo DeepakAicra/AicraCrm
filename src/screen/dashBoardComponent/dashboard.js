@@ -16,22 +16,28 @@ import ClockSquare from '../../component/clockCard/clockCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {API_URL} from '../../config';
+import WebClockSquare from '../../component/webClockCard/webClock';
 
 const Dashboard = () => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const [empId, setEmpId] = useState('');
+  const [empName, setEmpName] = useState('');
   const [superId, setSuperId] = useState('');
   const [superVisorList, setSuperVisorList] = useState([]);
   const [dataList, setDataList] = useState(null);
   const [leaveList, setLeaveList] = useState(null);
   const [wrkHoursList, setWrkHoursList] = useState(null);
 
+  const currentTime = new Date().toLocaleTimeString();
+
   const getUserData = async () => {
     try {
       const sprIdvalue = await AsyncStorage.getItem('supervisor_id');
+      const empValue = await AsyncStorage.getItem('loginName');
       const value = await AsyncStorage.getItem('userId');
       setSuperId(sprIdvalue);
+      setEmpName(empValue);
       setEmpId(value);
     } catch (error) {
       console.error('Error getting user data:', error);
@@ -94,13 +100,13 @@ const Dashboard = () => {
             style={styles.userImage}
           />
           <View style={{marginHorizontal: 10, justifyContent: 'center'}}>
-            <Text style={styles.titleTxtStyle}>Welcome, Guest</Text>
-            <Text style={styles.titleTxtStyle}>Employee Code : AU0055</Text>
-            {loading ? (
-              <View style={styles.loaderContainer}>
-                <ActivityIndicator size="small" color="#e61789" />
-              </View>
-            ) : superVisorList && superVisorList.length > 0 ? (
+            {empName ? (
+              <Text style={styles.titleTxtStyle}>Welcome, {empName}</Text>
+            ) : null}
+            {empId ? (
+              <Text style={styles.titleTxtStyle}>Employee Code : {empId}</Text>
+            ) : null}
+            {superVisorList && superVisorList.length > 0 ? (
               <Text style={styles.titleTxtStyle}>
                 Supervisor: {superVisorList[0].name}
               </Text>
@@ -144,6 +150,7 @@ const Dashboard = () => {
                 )}
               </ScrollView> */}
               <ScrollView horizontal>
+                <WebClockSquare title="Clock In Time" />
                 {dataList ? (
                   <Square title="Today Lead" value={dataList.Today_Lead} />
                 ) : null}
@@ -226,21 +233,9 @@ const Dashboard = () => {
                   />
                 ) : null}
               </ScrollView>
-              <View style={styles.titleView}>
-                <Text style={{fontSize: 18, fontWeight: 500, color: 'white'}}>
-                  Account Details
-                </Text>
-                <TouchableOpacity>
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      fontWeight: 'bold',
-                      color: '#06b6df',
-                    }}>
-                    See More
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              <Text style={{fontSize: 18, fontWeight: 500, color: 'white'}}>
+                Account Details
+              </Text>
               <ScrollView horizontal>
                 <Square
                   title="Account Added Today"
@@ -254,21 +249,9 @@ const Dashboard = () => {
                 />
                 <Square title="Today's Followup" value="0" onPress={() => {}} />
               </ScrollView>
-              <View style={styles.titleView}>
-                <Text style={{fontSize: 18, fontWeight: 500, color: 'white'}}>
-                  Task Details
-                </Text>
-                <TouchableOpacity>
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      fontWeight: 'bold',
-                      color: '#06b6df',
-                    }}>
-                    See More
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              <Text style={{fontSize: 18, fontWeight: 500, color: 'white'}}>
+                Task Details
+              </Text>
               <ScrollView horizontal>
                 <Square title="Task Pending" value="0" onPress={() => {}} />
                 <Square
@@ -278,21 +261,9 @@ const Dashboard = () => {
                 />
                 <Square title="Today's Followup" value="0" onPress={() => {}} />
               </ScrollView>
-              <View style={styles.titleView}>
-                <Text style={{fontSize: 18, fontWeight: 500, color: 'white'}}>
-                  Leave Balance
-                </Text>
-                <TouchableOpacity>
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      fontWeight: 'bold',
-                      color: '#06b6df',
-                    }}>
-                    See More
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              <Text style={{fontSize: 18, fontWeight: 500, color: 'white'}}>
+                Leave Balance
+              </Text>
               <ScrollView horizontal>
                 {leaveList ? (
                   <Square
@@ -315,21 +286,9 @@ const Dashboard = () => {
                   />
                 ) : null}
               </ScrollView>
-              <View style={styles.titleView}>
-                <Text style={{fontSize: 18, fontWeight: 500, color: 'white'}}>
-                  Monthly Working Report
-                </Text>
-                <TouchableOpacity>
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      fontWeight: 'bold',
-                      color: '#06b6df',
-                    }}>
-                    See More
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              <Text style={{fontSize: 18, fontWeight: 500, color: 'white'}}>
+                Monthly Working Report
+              </Text>
               <ScrollView horizontal>
                 <ClockSquare title="WorkDays" value="15" onPress={() => {}} />
                 <ClockSquare
@@ -343,21 +302,9 @@ const Dashboard = () => {
                   onPress={() => {}}
                 />
               </ScrollView>
-              <View style={styles.titleView}>
-                <Text style={{fontSize: 18, fontWeight: 500, color: 'white'}}>
-                  Revenue Target
-                </Text>
-                <TouchableOpacity>
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      fontWeight: 'bold',
-                      color: '#06b6df',
-                    }}>
-                    See More
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              <Text style={{fontSize: 18, fontWeight: 500, color: 'white'}}>
+                Revenue Target
+              </Text>
               <ScrollView horizontal>
                 <ClockSquare
                   title="Web Clock In/Out"

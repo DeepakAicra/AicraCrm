@@ -2,6 +2,9 @@ import React from 'react';
 import {View, Text, Image, SafeAreaView} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Dashboard from '../screen/dashBoardComponent/dashboard';
+import Schedule from '../screen/scheduleComponent/schedule';
+import FollowUps from '../screen/followupComponent/followUps';
+import Settings from '../screen/settingComponent/settings';
 
 const Tab = createBottomTabNavigator();
 
@@ -57,7 +60,7 @@ const TabStack = () => {
         />
         <Tab.Screen
           name="Schedule"
-          component={Screen2}
+          component={Schedule}
           options={{
             headerShown: false,
             tabBarLabel: 'Schedule',
@@ -80,7 +83,7 @@ const TabStack = () => {
         />
         <Tab.Screen
           name="Followup"
-          component={Screen3}
+          component={FollowUps}
           options={{
             headerShown: false,
             tabBarLabel: 'Followup',
@@ -103,7 +106,7 @@ const TabStack = () => {
         />
         <Tab.Screen
           name="Settings"
-          component={Screen4}
+          component={Settings}
           options={{
             headerShown: false,
             tabBarLabel: 'Settings',

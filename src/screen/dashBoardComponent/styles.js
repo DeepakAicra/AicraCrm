@@ -18,6 +18,9 @@ export default styles = StyleSheet.create({
     fontWeight: '400',
     color: 'white',
   },
+  loaderContainer: {
+    marginHorizontal: 100,
+  },
   mainView: {
     flex: 1,
     backgroundColor: '#012131',

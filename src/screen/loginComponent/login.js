@@ -23,6 +23,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [seePassword, setSeePassword] = useState(true);
   const [checkValidEmail, setCheckValidEmail] = useState(false);
+  const [userDataList, setUserDataList] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const handleCheckEmail = text => {
@@ -66,6 +67,7 @@ const Login = () => {
           if (response.data.error === false) {
             AsyncStorage.setItem('userId', response.data.message.emp_id);
             AsyncStorage.setItem('loginId', response.data.message.id);
+            AsyncStorage.setItem('loginName', response.data.message.name);
             AsyncStorage.setItem(
               'supervisor_id',
               response.data.message.supervisor_id,

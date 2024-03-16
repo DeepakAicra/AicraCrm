@@ -13,6 +13,8 @@ import AddNewContact from '../screen/addNewContactComponent/addNewContact';
 import AddNewLead from '../screen/addNewLeadComponent/addNewLead';
 import LeadList from '../screen/leadListComponent/leadList';
 import FollowUps from '../screen/followupComponent/followUps';
+import Schedule from '../screen/scheduleComponent/schedule';
+import Settings from '../screen/settingComponent/settings';
 import GlobalSearch from '../screen/globalSearchComponent/globalSearch';
 
 const Stack = createStackNavigator();
@@ -33,6 +35,8 @@ const AuthStack = () => {
       <Stack.Screen name="AddNewLead" component={AddNewLead} />
       <Stack.Screen name="LeadList" component={LeadList} />
       <Stack.Screen name="FollowUps" component={FollowUps} />
+      <Stack.Screen name="Schedule" component={Schedule} />
+      <Stack.Screen name="Settings" component={Settings} />
       <Stack.Screen name="GlobalSearch" component={GlobalSearch} />
     </Stack.Navigator>
   );

@@ -25,7 +25,7 @@ export default styles = StyleSheet.create({
     color: '#fff',
     fontSize: 19,
     textDecorationLine: 'underline',
-    margin: 10
+    margin: 10,
   },
   addButtonStyle: {
     backgroundColor: '#054767',
@@ -45,5 +45,17 @@ export default styles = StyleSheet.create({
   },
   cellStyle: {
     color: 'white',
+  },
+  tableContainer: {
+    marginTop: 20,
+  },
+  item: {
+    backgroundColor: '#fff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+  },
+  title: {
+    fontSize: 18,
   },
 });
