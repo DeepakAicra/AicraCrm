@@ -89,6 +89,25 @@ export default styles = StyleSheet.create({
     fontSize: 16,
     marginVertical: 7,
   },
+  addMoreButtonView: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  addMoreButton: {
+    width: '45%',
+    height: 40,
+    backgroundColor: '#ecf4ff',
+    borderRadius: 5,
+    justifyContent: 'center',
+    marginVertical: 5,
+    elevation: 3,
+  },
+  addMoreButtonText: {
+    fontSize: 18,
+    color: '#054767',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
   combineButtonView: {
     flexDirection: 'row',
     justifyContent: 'space-between',

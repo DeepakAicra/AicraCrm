@@ -28,6 +28,8 @@ const AddNewLead = ({navigation}) => {
   const [isTitleModalVisible, setTitleModalVisible] = useState(false);
   const [accountType, setAccountType] = useState('');
   const [accountTypeList, setAccountTypeList] = useState([]);
+  const [account, setAccount] = useState('');
+  const [accountList, setAccountList] = useState([]);
   const [industryType, setIndustryType] = useState('');
   const [industryTypeList, setIndustryTypeList] = useState([]);
   const [country, setCountry] = useState('');
@@ -40,6 +42,7 @@ const AddNewLead = ({navigation}) => {
   const [cityList, setCityList] = useState([]);
   const [title, setTitle] = useState('');
   const [titleList, setTitleList] = useState([]);
+  const userType = 'Sales';
 
   const toggleAccoutModal = () => {
     if (!isAccountModalVisible) {
@@ -88,7 +91,26 @@ const AddNewLead = ({navigation}) => {
   };
 
   const toggleAccountCreatedModal = () => {
-    setAccountCreatedModalVisible(!isAccountCreatedModalVisible);
+    if (!isAccountCreatedModalVisible) {
+      axios({
+        url: `${API_URL}User_List?usertype=${userType}`,
+        method: 'get',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+        .then(response => {
+          if (response.data && response.data.error === 'false') {
+            // console.log(response.data.users);
+            setAccountList(response.data.users);
+            setAccountCreatedModalVisible(!isAccountCreatedModalVisible);
+          } else {
+            Alert.alert('Invalid Details !');
+          }
+        })
+        .catch(error => console.log(error));
+    }
   };
 
   const toggleCountryModal = () => {
@@ -365,9 +387,21 @@ const AddNewLead = ({navigation}) => {
                         Select Account Created
                       </Text>
                     </View>
-                    <Text style={styles.contentText}>
-                      Please Select Account Created
-                    </Text>
+                    <ScrollView>
+                      {accountList?.map((a, i) => {
+                        return (
+                          <Pressable
+                            onPress={() => {
+                              setAccount(a.name);
+                              setAccountCreatedModalVisible(false);
+                            }}
+                            key={i}
+                            style={styles.contentmainView}>
+                            <Text style={styles.contentText}>{a.name}</Text>
+                          </Pressable>
+                        );
+                      })}
+                    </ScrollView>
                   </View>
                 </Modal>
                 <Pressable
@@ -378,6 +412,8 @@ const AddNewLead = ({navigation}) => {
                     placeholderTextColor={'grey'}
                     keyboardType="default"
                     editable={false}
+                    value={account}
+                    onChangeText={setAccount}
                     style={styles.divideInputStyle}
                   />
                   <AntDesign
@@ -730,6 +766,11 @@ const AddNewLead = ({navigation}) => {
                   style={styles.textInputStyle}
                 />
               </View>
+            </View>
+            <View style={styles.addMoreButtonView}>
+              <TouchableOpacity style={styles.addMoreButton}>
+                <Text style={styles.addMoreButtonText}>Add More POC +</Text>
+              </TouchableOpacity>
             </View>
             <View style={styles.combineButtonView}>
               <TouchableOpacity style={styles.firstButton}>
