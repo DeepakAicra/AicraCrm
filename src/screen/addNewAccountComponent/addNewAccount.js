@@ -1008,9 +1008,9 @@ const AddNewAccount = ({navigation}) => {
                         <View style={styles.headerView}>
                           <Text style={styles.headerText}>Select Title</Text>
                         </View>
-                        {titleList.length ? (
+                        {addTitleList.length ? (
                           <FlatList
-                            data={titleList}
+                            data={addTitleList}
                             renderItem={({item}) => (
                               <Pressable
                                 onPress={() => {
