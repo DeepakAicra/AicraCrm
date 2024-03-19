@@ -16,6 +16,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Modal from 'react-native-modal';
 import axios from 'axios';
 import {API_URL} from '../../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AddNewAccount = ({navigation}) => {
   const [isAccountModalVisible, setAccountModalVisible] = useState(false);
@@ -26,6 +27,9 @@ const AddNewAccount = ({navigation}) => {
   const [isStateModalVisible, setStateModalVisible] = useState(false);
   const [isCityModalVisible, setCityModalVisible] = useState(false);
   const [isTitleModalVisible, setTitleModalVisible] = useState(false);
+  const [isAddTitleModalVisible, setAddTitleModalVisible] = useState(false);
+  const [empId, setEmpId] = useState('');
+  const [accountId, setAccountId] = useState('');
   const [name, setName] = useState('');
   const [accountType, setAccountType] = useState('');
   const [accountTypeList, setAccountTypeList] = useState([]);
@@ -45,19 +49,57 @@ const AddNewAccount = ({navigation}) => {
   const [pinCode, setPinCode] = useState('');
   const [websiteInfo, setWebsiteInfo] = useState('');
   const [poc, setPoc] = useState('');
+  const [addPoc, setAddPoc] = useState('');
   const [designation, setDesignation] = useState('');
+  const [addDesignation, setAddDesignation] = useState('');
   const [title, setTitle] = useState('');
+  const [addTitle, setAddTitle] = useState('');
   const [titleList, setTitleList] = useState([]);
+  const [addTitleList, setAddTitleList] = useState([]);
   const [email, setEmail] = useState('');
+  const [addEmail, setAddEmail] = useState('');
   const [mobile, setMobile] = useState('');
+  const [addMobile, setAddMobile] = useState('');
   const [landline, setLandline] = useState('');
+  const [addLandline, setAddLandline] = useState('');
   const [linkedin, setLinkedin] = useState('');
+  const [addlinkedin, setAddlinkedin] = useState('');
   const [instagram, setInstagram] = useState('');
+  const [addInstagram, setAddInstagram] = useState('');
   const [facebook, setFacebook] = useState('');
+  const [addFacebook, setAddFacebook] = useState('');
   const [accountCrd, setAccountCrd] = useState('');
   const [account, setAccount] = useState('');
   const [accountList, setAccountList] = useState([]);
+  const [status, setStatus] = useState('1');
+  const [showAdditionalPOC, setShowAdditionalPOC] = useState(false);
   const userType = 'Sales';
+
+  const getUserData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('userId');
+      setEmpId(value);
+    } catch (error) {
+      console.error('Error getting user data:', error);
+    }
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, []);
+
+  const handleSearch = async () => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/Find_Account?Account_Name=${name}`,
+      );
+      console.log(response.data);
+      setName('');
+    } catch (error) {
+      Alert.alert('Error', 'Failed to fetch data');
+      console.error(error);
+    }
+  };
 
   const toggleAccoutModal = () => {
     if (!isAccountModalVisible) {
@@ -139,9 +181,9 @@ const AddNewAccount = ({navigation}) => {
       })
         .then(response => {
           if (response.data.error === 'false') {
-            // console.log(response.data.users);
             setStateList(response.data.users);
             setStateModalVisible(!isStateModalVisible);
+            // console.log(response.data.users);
           }
         })
         .catch(error => console.log(error));
@@ -159,10 +201,10 @@ const AddNewAccount = ({navigation}) => {
         },
       })
         .then(response => {
-          console.log(response.data.users);
           if (response.data.error === 'false') {
             setCityList(response.data.users);
             setCityModalVisible(!isCityModalVisible);
+            // console.log(response.data.users);
           }
         })
         .catch(error => console.log(error));
@@ -183,13 +225,36 @@ const AddNewAccount = ({navigation}) => {
           if (response.data && response.data.status === true) {
             setTitleList(response.data.Title_Data);
             // console.log(response.data.Title_Data);
+            setTitleModalVisible(!isTitleModalVisible);
           } else {
             Alert.alert('Invalid Details !');
           }
         })
         .catch(error => console.log(error));
     }
-    setTitleModalVisible(!isTitleModalVisible);
+  };
+
+  const toggleAddTitleModal = () => {
+    if (!isAddTitleModalVisible) {
+      axios({
+        url: API_URL + 'Title_Type',
+        method: 'get',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+        .then(response => {
+          if (response.data && response.data.status === true) {
+            setAddTitleList(response.data.Title_Data);
+            setAddTitleModalVisible(!isAddTitleModalVisible);
+            // console.log(response.data.Title_Data);
+          } else {
+            Alert.alert('Invalid Details !');
+          }
+        })
+        .catch(error => console.log(error));
+    }
   };
 
   const toggleAccountAssignedModal = () => {
@@ -215,7 +280,66 @@ const AddNewAccount = ({navigation}) => {
     }
   };
 
-  // const handleSubmit = () => {};
+  const onSubmit = () => {
+    let formData = new FormData();
+    formData.append('emp_id', account);
+    formData.append('accountid', accountId);
+    formData.append('Account_Name', name);
+    formData.append('txtaddress', address);
+    formData.append('Account_Type', accountType);
+    formData.append('country', country);
+    formData.append('state', state);
+    formData.append('city', city);
+    formData.append('Industry', industryType);
+    formData.append('companyservices', services);
+    formData.append('pin', pinCode);
+    formData.append('gstno', gstNo);
+    formData.append('website', websiteInfo);
+    formData.append('title', title);
+    formData.append('Linkedin', linkedin);
+    formData.append('insta', instagram);
+    formData.append('facebook', facebook);
+    formData.append('poc', poc);
+    formData.append('desigination', designation);
+    formData.append('txtmobileno', mobile);
+    formData.append('txtemail', email);
+    formData.append('landlineno', landline);
+    formData.append('addpoc', addPoc);
+    formData.append('adddesigination', addDesignation);
+    formData.append('addtitle', addTitle);
+    formData.append('addemail', addEmail);
+    formData.append('addmobileno', addMobile);
+    formData.append('addlandlineno', addLandline);
+    formData.append('addLinkedin', addlinkedin);
+    formData.append('addinsta', addInstagram);
+    formData.append('addfacebook', addFacebook);
+    formData.append('Status', status);
+
+    axios({
+      url: API_URL + 'New_Account',
+      method: 'POST',
+      data: formData,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+      .then(response => {
+        if (response.data.status === true) {
+          Alert.alert('Details updated successfully');
+        } else {
+          Alert.alert('Failed to update details');
+        }
+      })
+      .catch(error => {
+        console.error('Error while updating details:', error);
+        Alert.alert('Failed to update details');
+      });
+  };
+
+  const toggleAdditionalPOC = () => {
+    setShowAdditionalPOC(!showAdditionalPOC);
+  };
 
   return (
     <KeyboardAvoidingView
@@ -233,16 +357,17 @@ const AddNewAccount = ({navigation}) => {
           <View style={styles.mainView}>
             <View style={styles.selectedItemView}>
               <Text style={styles.titleTextBox}>Account Name*</Text>
-              <View style={styles.textInputContainer}>
+              <Pressable onPress={handleSearch} style={styles.textInputContainer}>
                 <TextInput
                   placeholder="Type to search Company/Organization"
                   placeholderTextColor={'grey'}
                   keyboardType="default"
                   value={name}
                   onChangeText={setName}
+                  onSubmitEditing={handleSearch}
                   style={styles.textInputStyle}
                 />
-              </View>
+              </Pressable>
             </View>
             <View style={styles.selectedItemView}>
               <Text style={styles.titleTextBox}>Account Type</Text>
@@ -836,12 +961,174 @@ const AddNewAccount = ({navigation}) => {
                 </Pressable>
               </View>
             </View>
+            {/* Add More POC Section */}
+            {showAdditionalPOC && (
+              <>
+                <View style={styles.selectedItemView}>
+                  <Text style={styles.titleTextBox}>POC *</Text>
+                  <View style={styles.textInputContainer}>
+                    <TextInput
+                      placeholderTextColor={'grey'}
+                      keyboardType="default"
+                      value={addPoc}
+                      onChangeText={setAddPoc}
+                      style={styles.textInputStyle}
+                    />
+                  </View>
+                </View>
+                <View style={styles.selectedItemView}>
+                  <Text style={styles.titleTextBox}>Designation*</Text>
+                  <View style={styles.textInputContainer}>
+                    <TextInput
+                      placeholderTextColor={'grey'}
+                      keyboardType="default"
+                      value={addDesignation}
+                      onChangeText={setAddDesignation}
+                      style={styles.textInputStyle}
+                    />
+                  </View>
+                </View>
+                <View style={styles.selectedItemView}>
+                  <Text style={styles.titleTextBox}>Title</Text>
+                  <View style={styles.divideInputContainer}>
+                    <Modal
+                      onBackdropPress={() => setAddTitleModalVisible(false)}
+                      onBackButtonPress={() => setAddTitleModalVisible(false)}
+                      isVisible={isAddTitleModalVisible}
+                      swipeDirection="down"
+                      onSwipeComplete={toggleAddTitleModal}
+                      animationIn="bounceInUp"
+                      animationOut="bounceOutDown"
+                      animationInTiming={900}
+                      animationOutTiming={500}
+                      backdropTransitionInTiming={1000}
+                      backdropTransitionOutTiming={500}
+                      style={styles.modal}>
+                      <View style={styles.modalContent}>
+                        <View style={styles.headerView}>
+                          <Text style={styles.headerText}>Select Title</Text>
+                        </View>
+                        {titleList.length ? (
+                          <FlatList
+                            data={titleList}
+                            renderItem={({item}) => (
+                              <Pressable
+                                onPress={() => {
+                                  setAddTitle(item);
+                                  setAddTitleModalVisible(false);
+                                }}
+                                style={styles.contentmainView}>
+                                <Text style={styles.contentText}>{item}</Text>
+                              </Pressable>
+                            )}
+                          />
+                        ) : null}
+                      </View>
+                    </Modal>
+                    <Pressable
+                      onPress={toggleAddTitleModal}
+                      style={styles.dividePresableStyle}>
+                      <TextInput
+                        placeholder="--Please Select Title--"
+                        placeholderTextColor={'grey'}
+                        keyboardType="default"
+                        editable={false}
+                        value={addTitle}
+                        onChangeText={setAddTitle}
+                        onPressIn={toggleAddTitleModal}
+                        style={styles.divideInputStyle}
+                      />
+                      <AntDesign
+                        name={'down'}
+                        size={20}
+                        color={'black'}
+                        style={styles.iconStyle}
+                      />
+                    </Pressable>
+                  </View>
+                </View>
+                <View style={styles.selectedItemView}>
+                  <Text style={styles.titleTextBox}>Email ID POC *</Text>
+                  <View style={styles.textInputContainer}>
+                    <TextInput
+                      placeholderTextColor={'grey'}
+                      keyboardType="email-address"
+                      value={addEmail}
+                      onChangeText={setAddEmail}
+                      style={styles.textInputStyle}
+                    />
+                  </View>
+                </View>
+                <View style={styles.selectedItemView}>
+                  <Text style={styles.titleTextBox}>Mobile POC *</Text>
+                  <View style={styles.textInputContainer}>
+                    <TextInput
+                      placeholderTextColor={'grey'}
+                      keyboardType="number-pad"
+                      value={addMobile}
+                      onChangeText={setAddMobile}
+                      style={styles.textInputStyle}
+                    />
+                  </View>
+                </View>
+                <View style={styles.selectedItemView}>
+                  <Text style={styles.titleTextBox}>Landline POC *</Text>
+                  <View style={styles.textInputContainer}>
+                    <TextInput
+                      placeholderTextColor={'grey'}
+                      keyboardType="number-pad"
+                      value={addLandline}
+                      onChangeText={setAddLandline}
+                      style={styles.textInputStyle}
+                    />
+                  </View>
+                </View>
+                <View style={styles.selectedItemView}>
+                  <Text style={styles.titleTextBox}>Linkedin POC *</Text>
+                  <View style={styles.textInputContainer}>
+                    <TextInput
+                      placeholderTextColor={'grey'}
+                      keyboardType="default"
+                      value={addlinkedin}
+                      onChangeText={setAddlinkedin}
+                      style={styles.textInputStyle}
+                    />
+                  </View>
+                </View>
+                <View style={styles.selectedItemView}>
+                  <Text style={styles.titleTextBox}>Insta POC *</Text>
+                  <View style={styles.textInputContainer}>
+                    <TextInput
+                      placeholderTextColor={'grey'}
+                      keyboardType="default"
+                      value={addInstagram}
+                      onChangeText={setAddInstagram}
+                      style={styles.textInputStyle}
+                    />
+                  </View>
+                </View>
+                <View style={styles.selectedItemView}>
+                  <Text style={styles.titleTextBox}>Facebook POC *</Text>
+                  <View style={styles.textInputContainer}>
+                    <TextInput
+                      placeholderTextColor={'grey'}
+                      keyboardType="default"
+                      value={addFacebook}
+                      onChangeText={setAddFacebook}
+                      style={styles.textInputStyle}
+                    />
+                  </View>
+                </View>
+              </>
+            )}
             <View style={styles.firstButtonView}>
-              <TouchableOpacity style={styles.firstButton}>
+              <TouchableOpacity
+                onPress={toggleAdditionalPOC}
+                style={styles.firstButton}>
                 <Text style={styles.firstButtonText}>Add More POC +</Text>
               </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.secondButton}>
+            <TouchableOpacity onPress={onSubmit} style={styles.secondButton}>
               <Text style={styles.secondButtonText}>Save Account</Text>
             </TouchableOpacity>
           </View>
