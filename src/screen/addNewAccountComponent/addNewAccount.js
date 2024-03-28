@@ -17,6 +17,7 @@ import Modal from 'react-native-modal';
 import axios from 'axios';
 import {API_URL} from '../../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import DropdownSearchBar from '../../component/customSearchBar';
 
 const AddNewAccount = ({navigation}) => {
   const [isAccountModalVisible, setAccountModalVisible] = useState(false);
@@ -341,6 +342,8 @@ const AddNewAccount = ({navigation}) => {
     setShowAdditionalPOC(!showAdditionalPOC);
   };
 
+  const data = ['Apple', 'Banana', 'Orange', 'Pineapple', 'Mango'];
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -353,11 +356,14 @@ const AddNewAccount = ({navigation}) => {
           textColor={'#ffffff'}
           onPress={() => navigation.goBack()}
         />
+        <DropdownSearchBar data={data}/>
         <ScrollView>
           <View style={styles.mainView}>
             <View style={styles.selectedItemView}>
               <Text style={styles.titleTextBox}>Account Name*</Text>
-              <Pressable onPress={handleSearch} style={styles.textInputContainer}>
+              <Pressable
+                onPress={handleSearch}
+                style={styles.textInputContainer}>
                 <TextInput
                   placeholder="Type to search Company/Organization"
                   placeholderTextColor={'grey'}

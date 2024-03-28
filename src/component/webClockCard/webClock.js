@@ -1,20 +1,30 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 
 const WebClockSquare = ({title}) => {
   const [showClock, setShowClock] = useState(false);
   const [time, setTime] = useState('');
 
-  const handlePress = () => {
-    if (!showClock) {
-      updateTime();
-    }
-    setShowClock(!showClock);
-  };
-
   const updateTime = () => {
     const currentTime = new Date().toLocaleTimeString();
     setTime(currentTime);
+  };
+
+  useEffect(() => {
+    let intervalId;
+    if (showClock) {
+      intervalId = setInterval(updateTime, 1000);
+    } else {
+      clearInterval(intervalId);
+    }
+    return () => clearInterval(intervalId);
+  }, [showClock]);
+
+  const handlePress = () => {
+    setShowClock(!showClock);
+    if (!showClock) {
+      updateTime();
+    }
   };
 
   return (

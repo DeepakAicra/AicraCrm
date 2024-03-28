@@ -29,8 +29,6 @@ const Dashboard = () => {
   const [leaveList, setLeaveList] = useState(null);
   const [wrkHoursList, setWrkHoursList] = useState(null);
 
-  const currentTime = new Date().toLocaleTimeString();
-
   const getUserData = async () => {
     try {
       const sprIdvalue = await AsyncStorage.getItem('supervisor_id');
