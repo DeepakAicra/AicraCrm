@@ -16,6 +16,7 @@ import FollowUps from '../screen/followupComponent/followUps';
 import Schedule from '../screen/scheduleComponent/schedule';
 import Settings from '../screen/settingComponent/settings';
 import GlobalSearch from '../screen/globalSearchComponent/globalSearch';
+import ConvertToLead from '../screen/convertToLead/convertToLead';
 
 const Stack = createStackNavigator();
 
@@ -38,6 +39,7 @@ const AuthStack = () => {
       <Stack.Screen name="Schedule" component={Schedule} />
       <Stack.Screen name="Settings" component={Settings} />
       <Stack.Screen name="GlobalSearch" component={GlobalSearch} />
+      <Stack.Screen name="ConvertToLead" component={ConvertToLead} />
     </Stack.Navigator>
   );
 };

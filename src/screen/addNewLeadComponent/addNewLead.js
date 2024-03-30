@@ -986,10 +986,14 @@ const AddNewLead = ({navigation}) => {
               </TouchableOpacity>
             </View>
             <View style={styles.combineButtonView}>
-              <TouchableOpacity style={styles.firstButton}>
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+                style={styles.firstButton}>
                 <Text style={styles.firstButtonText}>Previous</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.secondButton}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('ConvertToLead')}
+                style={styles.secondButton}>
                 <Text style={styles.secondButtonText}>Next</Text>
               </TouchableOpacity>
             </View>

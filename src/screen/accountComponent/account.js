@@ -22,14 +22,8 @@ const Account = ({navigation}) => {
   const [itemsPerPage, setItemsPerPage] = useState(5);
   
   const data = [
-    {id: 1, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
+    {id: 1, name: 'Ravi Ranjan', age: 28, email: 'ravi.ranjan@example.com'},
     {id: 2, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
-    {id: 3, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
-    {id: 4, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
-    {id: 5, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
-    {id: 6, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
-    {id: 7, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
-    // Add more data objects as needed
   ];
 
   const getUserData = async () => {
