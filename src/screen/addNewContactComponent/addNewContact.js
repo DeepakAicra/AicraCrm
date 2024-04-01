@@ -32,14 +32,23 @@ const AddNewContact = ({navigation}) => {
   }, []);
 
   const getUserData = async () => {
-    const loginId = await AsyncStorage.getItem('loginId');
-    const value = await AsyncStorage.getItem('userId');
-    setId(loginId);
-    setEmpId(value);
+    try {
+      const loginId = await AsyncStorage.getItem('contactListId');
+      const value = await AsyncStorage.getItem('userId');
+      setId(loginId);
+      setEmpId(value);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
   };
 
   const handleLogin = () => {
-    let formData = new FormData();
+    if (!name || !organization || !email || !phone) {
+      Alert.alert('Please fill in all required fields');
+      return;
+    }
+
+    const formData = new FormData();
     formData.append('id', id);
     formData.append('emp_id', empId);
     formData.append('name', name);
@@ -51,7 +60,7 @@ const AddNewContact = ({navigation}) => {
     formData.append('twitter', twitter);
     formData.append('linkedin', linkedin);
     formData.append('remarks', remarks);
-    console.log(organization);
+
     axios({
       url: API_URL + 'Contact_Update',
       method: 'POST',
@@ -63,14 +72,27 @@ const AddNewContact = ({navigation}) => {
     })
       .then(response => {
         // console.log(response.data);
-        if (response.data.error === false) {
-          Alert.alert('Details Update successfully');
+        if (response.data.status === true) {
+          Alert.alert('Details updated successfully');
         } else {
           Alert.alert('Sorry! Details not updated.');
         }
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        if (error.response) {
+          console.error('Server error:', error.response.data);
+          Alert.alert('Server error. Please try again later.');
+        } else if (error.request) {
+          console.error('Network error:', error.request);
+          Alert.alert('Network error. Please check your internet connection.');
+        } else {
+          console.error('Error:', error.message);
+          Alert.alert('An error occurred. Please try again later.');
+        }
+      });
   };
+
+  const handleCancel = () => {};
 
   return (
     <KeyboardAvoidingView
@@ -194,17 +216,18 @@ const AddNewContact = ({navigation}) => {
           <Text style={styles.titleStyle}>Additional Information</Text>
           <View style={styles.selectedItemView}>
             <Text style={styles.titleTextBox}>Remarks</Text>
-            <View style={styles.textInputContainer}>
+            <View style={styles.multiLineView}>
               <TextInput
                 placeholder="--Enter Remarks--"
                 placeholderTextColor={'grey'}
                 keyboardType="name-phone-pad"
+                editable
                 multiline
-                numberOfLines={4}
-                // maxLength={40}
+                numberOfLines={3}
+                maxLength={40}
                 value={remarks}
                 onChangeText={setRemarks}
-                style={styles.textInputStyle}
+                style={{padding: 10}}
               />
             </View>
           </View>
@@ -212,7 +235,9 @@ const AddNewContact = ({navigation}) => {
             <TouchableOpacity onPress={handleLogin} style={styles.firstButton}>
               <Text style={styles.firstButtonText}>Save</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.secondButton}>
+            <TouchableOpacity
+              onPress={handleCancel}
+              style={styles.secondButton}>
               <Text style={styles.secondButtonText}>Cancel</Text>
             </TouchableOpacity>
           </View>

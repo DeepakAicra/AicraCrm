@@ -1,5 +1,13 @@
 import React, {useState} from 'react';
-import {View, Text, Image, TouchableOpacity, SafeAreaView} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  SafeAreaView,
+  BackHandler,
+  Alert,
+} from 'react-native';
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -13,6 +21,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Colors from '../Assets/Theme/Theme';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CustomDrawer = props => {
   const navigation = useNavigation();
@@ -43,6 +52,30 @@ const CustomDrawer = props => {
     } else {
       setNestedDrawerItms(true);
     }
+  };
+
+  const logout = () => {
+    Alert.alert(
+      'Logout',
+      'Are you sure to logout Application?',
+      [
+        {
+          text: 'No',
+          onPress: () => console.log('--> No'),
+        },
+        {
+          text: 'Yes',
+          onPress: () => {
+            AsyncStorage.clear();
+            AsyncStorage.removeItem('userId');
+            AsyncStorage.removeItem('loginId');
+            AsyncStorage.removeItem('loginName');
+            BackHandler.exitApp();
+          },
+        },
+      ],
+      {cancelable: false},
+    );
   };
 
   return (
@@ -591,6 +624,26 @@ const CustomDrawer = props => {
               setFocus(1);
               // props.navigation.navigate('settings');
             }}
+          />
+          <DrawerItem
+            // focused={focus == 1 ? true : false}
+            pressColor={Colors.azure}
+            activeTintColor="#b30059"
+            icon={({color}) => (
+              <Ionicons name="exit-outline" color={color} size={22} />
+            )}
+            label={({color}) => (
+              <Text
+                style={{
+                  color,
+                  fontSize: 14,
+                  fontWeight: 'bold',
+                  marginLeft: -20,
+                }}>
+                Logout
+              </Text>
+            )}
+            onPress={logout}
           />
         </View>
       </DrawerContentScrollView>

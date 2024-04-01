@@ -13,6 +13,7 @@ import axios from 'axios';
 import {API_URL} from '../../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {DataTable} from 'react-native-paper';
+import CustomTableModel from '../../component/customTableModel';
 
 const Contact = ({navigation}) => {
   const [empId, setEmpId] = useState('');
@@ -21,15 +22,33 @@ const Contact = ({navigation}) => {
   const [page, setPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
-  const data = [
-    {id: 1, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
-    {id: 2, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
-    {id: 3, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
-    {id: 4, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
-    {id: 5, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
-    {id: 6, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
-    {id: 7, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
-    // Add more data objects as needed
+  // console.log(tableList);
+  // const data = [
+  //   {id: 1, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
+  //   {id: 2, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
+  //   {id: 3, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
+  //   {id: 4, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
+  //   {id: 5, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
+  //   {id: 6, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
+  //   {id: 7, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
+  //   // Add more data objects as needed
+  // ];
+
+  const tableData = [
+    {
+      altphoneno: '7870561523',
+      email: 'mrraviranjan24@gmail.com',
+      emp_id: 'AU7392',
+      facebook: '#',
+      id: '4',
+      linkedin: '#',
+      name: 'Ravi Ranjan Singh',
+      organization: 'AICRA',
+      phoneno: '7870561523',
+      remarks: 'remarks goes here',
+      submited_date: '2024-03-04 11:24:53',
+      twitter: '#',
+    },
   ];
 
   const getUserData = async () => {
@@ -53,7 +72,11 @@ const Contact = ({navigation}) => {
       .then(response => {
         if (response.data.status == true) {
           setTableList(response.data.Contact_List_Data);
-          // console.log(response.data.Contact_List_Data);
+          AsyncStorage.setItem(
+            'contactListId',
+            response.data.Contact_List_Data.id,
+          );
+          console.log(response.data.Contact_List_Data);
         }
       })
       .catch(error => console.log(error));
@@ -131,7 +154,8 @@ const Contact = ({navigation}) => {
             </ScrollView>
 
             <Text style={styles.entryTxt}>Show Entries</Text>
-            <DataTable style={{backgroundColor: '#ffffff'}}>
+            <CustomTableModel data={tableData} />
+            {/* <DataTable style={{backgroundColor: '#ffffff'}}>
               <DataTable.Header style={styles.tableHeader}>
                 <DataTable.Title>Id</DataTable.Title>
                 <DataTable.Title numeric>Name</DataTable.Title>
@@ -157,7 +181,7 @@ const Contact = ({navigation}) => {
                   data.length,
                 )} of ${data.length}`}
               />
-            </DataTable>
+            </DataTable> */}
           </View>
         </ScrollView>
       </View>

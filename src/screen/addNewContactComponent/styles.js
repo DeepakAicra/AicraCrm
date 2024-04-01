@@ -19,7 +19,7 @@ export default styles = StyleSheet.create({
     borderColor: 'black',
     borderWidth: 1,
     borderRadius: 10,
-    alignItems: 'center',
+    // alignItems: 'center',
     justifyContent: 'center',
   },
   textInputStyle: {
@@ -33,6 +33,12 @@ export default styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
     marginVertical: 2,
+  },
+  multiLineView: {
+    backgroundColor: '#fff',
+    borderBottomColor: '#000000',
+    borderWidth: 1,
+    borderRadius: 5,
   },
   combineButtonView: {
     flexDirection: 'row',
