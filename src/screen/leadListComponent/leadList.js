@@ -5,6 +5,7 @@ import Header from '../../component/generalHeader/header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {API_URL} from '../../config';
+import TableCard from '../../component/tableCards';
 
 const LeadList = ({navigation}) => {
   const [empId, setEmpId] = useState('');
@@ -32,9 +33,9 @@ const LeadList = ({navigation}) => {
       },
     })
       .then(response => {
-        console.log(response.data.lead_data);
         if (response.data.status == true) {
-          // setLeadDataList(response.data.lead_data);
+          setLeadDataList(response.data.lead_data);
+          // console.log(response.data);
         }
       })
       .catch(error => console.log(error));
@@ -49,7 +50,13 @@ const LeadList = ({navigation}) => {
         textColor={'#ffffff'}
         onPress={() => navigation.goBack()}
       />
-      <Text>LeadList</Text>
+      {leadDataList && leadDataList.Entity_Name && (
+        <TableCard
+          title={leadDataList.Entity_Name}
+          mobile={leadDataList.Mobile_Number}
+          email={leadDataList.Email}
+        />
+      )}
     </View>
   );
 };

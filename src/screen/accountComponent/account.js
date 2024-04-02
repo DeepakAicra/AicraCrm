@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
+  FlatList,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import styles from './styles';
@@ -13,18 +14,12 @@ import {DataTable} from 'react-native-paper';
 import axios from 'axios';
 import {API_URL} from '../../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import TableCard from '../../component/tableCards';
 
 const Account = ({navigation}) => {
   const [empId, setEmpId] = useState('');
   const [tableList, setTableList] = useState([]);
   const [accountInfoList, setAccountInfoList] = useState([]);
-  const [page, setPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
-  
-  const data = [
-    {id: 1, name: 'Ravi Ranjan', age: 28, email: 'ravi.ranjan@example.com'},
-    {id: 2, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
-  ];
 
   const getUserData = async () => {
     try {
@@ -48,6 +43,7 @@ const Account = ({navigation}) => {
         ]);
 
         if (accountListResponse.data.status === true) {
+          console.log(accountListResponse.data.account_data);
           setTableList(accountListResponse.data.account_data);
         }
 
@@ -108,34 +104,49 @@ const Account = ({navigation}) => {
                 />
               ) : null}
             </ScrollView>
-            <Text style={styles.entryTxt}>Show Entries</Text>
-            <DataTable style={{backgroundColor: '#ffffff'}}>
-              <DataTable.Header style={styles.tableHeader}>
-                <DataTable.Title>Id</DataTable.Title>
-                <DataTable.Title numeric>Name</DataTable.Title>
-                <DataTable.Title numeric>Age</DataTable.Title>
-                <DataTable.Title numeric>Email</DataTable.Title>
-              </DataTable.Header>
-              {data
-                .slice(page * itemsPerPage, (page + 1) * itemsPerPage)
-                .map((row, index) => (
-                  <DataTable.Row key={index}>
-                    <DataTable.Cell>{row.id}</DataTable.Cell>
-                    <DataTable.Cell numeric>{row.name}</DataTable.Cell>
-                    <DataTable.Cell numeric>{row.age}</DataTable.Cell>
-                    <DataTable.Cell numeric>{row.email}</DataTable.Cell>
-                  </DataTable.Row>
-                ))}
-              <DataTable.Pagination
-                page={page}
-                numberOfPages={Math.ceil(data.length / itemsPerPage)}
-                onPageChange={page => setPage(page)}
-                label={`${page * itemsPerPage + 1}-${Math.min(
-                  (page + 1) * itemsPerPage,
-                  data.length,
-                )} of ${data.length}`}
+            <Text style={styles.entryTxt}>Lead Entries</Text>
+            {/* {tableList?.map((item, index) => (
+              <TableCard
+                key={index}
+                title={item.Entity_Name}
+                mobile={item.Mobile_Number}
+                email={item.Email}
               />
-            </DataTable>
+            ))} */}
+            {/* {tableList.length ? (
+              <FlatList
+                data={tableList}
+                renderItem={({item}) => (
+                  <TableCard
+                    title={item.Entity_Name}
+                    mobile={item.Mobile_Number}
+                    email={item.Email}
+                  />
+                )}
+              />
+            ) : null} */}
+            {tableList && tableList.Entity_Name && (
+              <TableCard
+                title={tableList.Entity_Name}
+                mobile={tableList.Mobile_Number}
+                email={tableList.Email}
+              />
+            )}
+            {/* <TableCard
+              title="Satendra kumar"
+              mobile="7856235896"
+              email="mrravi@email.com"
+            />
+            <TableCard
+              title="Devendra Gupta"
+              mobile="7856235896"
+              email="mrravi@email.com"
+            />
+            <TableCard
+              title="Amit Gupta"
+              mobile="7856235896"
+              email="mrravi@email.com"
+            /> */}
           </View>
         </ScrollView>
       </View>
