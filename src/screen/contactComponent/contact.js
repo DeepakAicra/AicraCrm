@@ -1,102 +1,77 @@
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
+  Linking,
+  ActivityIndicator,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
-import styles from './styles';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../../component/generalHeader/header';
 import Square from '../../component/cards/cards';
-import axios from 'axios';
+import TableCard from '../../component/tableCards';
+import styles from './styles';
 import {API_URL} from '../../config';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {DataTable} from 'react-native-paper';
-import CustomTableModel from '../../component/customTableModel';
 
 const Contact = ({navigation}) => {
-  const [empId, setEmpId] = useState('');
+  const [empId, setEmpId] = useState(null);
   const [tableList, setTableList] = useState([]);
-  const [contactInfoList, setContactInfoList] = useState([]);
-  const [page, setPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
-
-  // console.log(tableList);
-  // const data = [
-  //   {id: 1, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
-  //   {id: 2, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
-  //   {id: 3, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
-  //   {id: 4, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
-  //   {id: 5, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
-  //   {id: 6, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
-  //   {id: 7, name: 'Deepak Gupta', age: 28, email: 'deepak@example.com'},
-  //   // Add more data objects as needed
-  // ];
-
-  const tableData = [
-    {
-      altphoneno: '7870561523',
-      email: 'mrraviranjan24@gmail.com',
-      emp_id: 'AU7392',
-      facebook: '#',
-      id: '4',
-      linkedin: '#',
-      name: 'Ravi Ranjan Singh',
-      organization: 'AICRA',
-      phoneno: '7870561523',
-      remarks: 'remarks goes here',
-      submited_date: '2024-03-04 11:24:53',
-      twitter: '#',
-    },
-  ];
-
-  const getUserData = async () => {
-    const value = await AsyncStorage.getItem('userId');
-    setEmpId(value);
-  };
+  const [contactInfoList, setContactInfoList] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [showAllEntries, setShowAllEntries] = useState(false);
 
   useEffect(() => {
+    const getUserData = async () => {
+      const value = await AsyncStorage.getItem('userId');
+      setEmpId(value);
+    };
     getUserData();
   }, []);
 
   useEffect(() => {
-    axios({
-      url: `${API_URL}Contact_List?empid=${empId}`,
-      method: 'get',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-      .then(response => {
-        if (response.data.status == true) {
-          setTableList(response.data.Contact_List_Data);
-          AsyncStorage.setItem(
-            'contactListId',
-            response.data.Contact_List_Data.id,
-          );
-          console.log(response.data.Contact_List_Data);
+    if (!empId) return;
+    const fetchData = async () => {
+      try {
+        const contactListResponse = await axios.get(
+          `${API_URL}Contact_List?empid=${empId}`,
+        );
+        if (contactListResponse.data.status === true) {
+          setTableList(contactListResponse.data.Contact_List_Data);
         }
-      })
-      .catch(error => console.log(error));
 
-    axios({
-      url: `${API_URL}Contacts_Information?empid=${empId}`,
-      method: 'get',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-      .then(response => {
-        if (response.data.error === false) {
-          setContactInfoList(response.data.Contacts_Information);
-          // console.log(response.data.Contacts_Information);
+        const contactsInfoResponse = await axios.get(
+          `${API_URL}Contacts_Information?empid=${empId}`,
+        );
+        if (contactsInfoResponse.data.error === false) {
+          setContactInfoList(contactsInfoResponse.data.Contacts_Information);
         }
-      })
-      .catch(error => console.log(error));
-  }, []);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [empId]);
+
+  const handleLeadEntriesPress = () => {
+    setShowAllEntries(true);
+  };
+
+  const handleCall = mobileNumber => {
+    Linking.openURL(`tel:${mobileNumber}`);
+  };
+
+  const handleSendMail = emailAddress => {
+    Linking.openURL(`mailto:${emailAddress}`);
+  };
+
+  const handleWhatsApp = mobileNumber => {
+    Linking.openURL(`whatsapp://send?text=hello&phone=${mobileNumber}`);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -152,36 +127,60 @@ const Contact = ({navigation}) => {
                 />
               ) : null}
             </ScrollView>
-
-            <Text style={styles.entryTxt}>Show Entries</Text>
-            <CustomTableModel data={tableData} />
-            {/* <DataTable style={{backgroundColor: '#ffffff'}}>
-              <DataTable.Header style={styles.tableHeader}>
-                <DataTable.Title>Id</DataTable.Title>
-                <DataTable.Title numeric>Name</DataTable.Title>
-                <DataTable.Title numeric>Age</DataTable.Title>
-                <DataTable.Title numeric>Email</DataTable.Title>
-              </DataTable.Header>
-              {data
-                .slice(page * itemsPerPage, (page + 1) * itemsPerPage)
-                .map((row, index) => (
-                  <DataTable.Row key={index}>
-                    <DataTable.Cell>{row.id}</DataTable.Cell>
-                    <DataTable.Cell numeric>{row.name}</DataTable.Cell>
-                    <DataTable.Cell numeric>{row.age}</DataTable.Cell>
-                    <DataTable.Cell numeric>{row.email}</DataTable.Cell>
-                  </DataTable.Row>
-                ))}
-              <DataTable.Pagination
-                page={page}
-                numberOfPages={Math.ceil(data.length / itemsPerPage)}
-                onPageChange={page => setPage(page)}
-                label={`${page * itemsPerPage + 1}-${Math.min(
-                  (page + 1) * itemsPerPage,
-                  data.length,
-                )} of ${data.length}`}
-              />
-            </DataTable> */}
+            <View style={styles.titleView}>
+              <Text style={{fontSize: 18, fontWeight: 500, color: 'white'}}>
+                Lead Entries
+              </Text>
+              <TouchableOpacity onPress={handleLeadEntriesPress}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 'bold',
+                    color: '#06b6df',
+                  }}>
+                  See More
+                </Text>
+              </TouchableOpacity>
+            </View>
+            {loading ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#e61789" />
+              </View>
+            ) : (
+              <>
+                {showAllEntries
+                  ? tableList.map((item, index) => (
+                      <TableCard
+                        key={index}
+                        title={item.name}
+                        mobile={item.phoneno}
+                        email={item.email}
+                        edit={() =>
+                          navigation.navigate('AddNewContact', {item})
+                        }
+                        call={() => handleCall(item.phoneno)}
+                        sendMail={() => handleSendMail(item.email)}
+                        whatsApp={() => handleWhatsApp(item.phoneno)}
+                      />
+                    ))
+                  : tableList
+                      .slice(0, 10)
+                      .map((item, index) => (
+                        <TableCard
+                          key={index}
+                          title={item.name}
+                          mobile={item.phoneno}
+                          email={item.email}
+                          edit={() =>
+                            navigation.navigate('AddNewContact', {item})
+                          }
+                          call={() => handleCall(item.phoneno)}
+                          sendMail={() => handleSendMail(item.email)}
+                          whatsApp={() => handleWhatsApp(item.phoneno)}
+                        />
+                      ))}
+              </>
+            )}
           </View>
         </ScrollView>
       </View>

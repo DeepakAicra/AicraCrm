@@ -1,7 +1,7 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 
-const TableCard = ({title, mobile, email}) => {
+const TableCard = ({title, mobile, email, edit, call, sendMail, whatsApp}) => {
   const firstCharacter = title.charAt(0);
 
   return (
@@ -13,29 +13,39 @@ const TableCard = ({title, mobile, email}) => {
           </View>
         </View>
         <View style={styles.rightContent}>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.contact}>+91 {mobile}</Text>
-          <Text style={styles.contact}>{email}</Text>
+          <Text style={styles.title} numberOfLines={2}>
+            {title}
+          </Text>
+          <Text style={styles.contact}>Mob: +91- {mobile}</Text>
+          <Text style={styles.contact}>E-mail: {email}</Text>
         </View>
       </View>
       <View style={styles.actions}>
         <Text style={styles.action}>Convert to Lead</Text>
-        <Image
-          source={require('../Assets/Images/pencil-square-icon.png')}
-          style={styles.actionImage}
-        />
-        <Image
-          source={require('../Assets/Images/call-icon.png')}
-          style={styles.actionImage}
-        />
-        <Image
-          source={require('../Assets/Images/red-mail-icon.png')}
-          style={styles.actionImage}
-        />
-        <Image
-          source={require('../Assets/Images/whatsapp-color-icon.png')}
-          style={styles.actionImage}
-        />
+        <TouchableOpacity onPress={edit}>
+          <Image
+            source={require('../Assets/Images/pencil-square-icon.png')}
+            style={styles.actionImage}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={call}>
+          <Image
+            source={require('../Assets/Images/call-icon.png')}
+            style={styles.actionImage}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={sendMail}>
+          <Image
+            source={require('../Assets/Images/red-mail-icon.png')}
+            style={styles.actionImage}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={whatsApp}>
+          <Image
+            source={require('../Assets/Images/whatsapp-color-icon.png')}
+            style={styles.actionImage}
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -83,6 +93,7 @@ const styles = StyleSheet.create({
   contact: {
     fontSize: 14,
     color: '#888',
+    fontWeight: '400',
   },
   actions: {
     flexDirection: 'row',

@@ -40,4 +40,9 @@ export default styles = StyleSheet.create({
   tableHeader: {
     backgroundColor: 'grey',
   },
+  titleView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    margin: 5,
+  },
 });

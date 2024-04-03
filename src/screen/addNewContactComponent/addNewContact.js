@@ -13,6 +13,7 @@ import Header from '../../component/generalHeader/header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {API_URL} from '../../config';
+import {useRoute} from '@react-navigation/native';
 
 const AddNewContact = ({navigation}) => {
   const [id, setId] = useState('');
@@ -26,16 +27,28 @@ const AddNewContact = ({navigation}) => {
   const [linkedin, setLinkedin] = useState('');
   const [twitter, setTwitter] = useState('');
   const [remarks, setRemarks] = useState('');
+  const {
+    params: {item},
+  } = useRoute();
 
   useEffect(() => {
+    setId(item.id);
+    setName(item.name);
+    setOrganization(item.organization);
+    setEmail(item.email)
+    setPhone(item.phoneno)
+    setAltPhone(item.altphoneno)
+    setFacebook(item.facebook)
+    setLinkedin(item.linkedin)
+    setTwitter(item.twitter)
+    setRemarks(item.remarks)
     getUserData();
   }, []);
 
+
   const getUserData = async () => {
     try {
-      const loginId = await AsyncStorage.getItem('contactListId');
       const value = await AsyncStorage.getItem('userId');
-      setId(loginId);
       setEmpId(value);
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -72,7 +85,7 @@ const AddNewContact = ({navigation}) => {
     })
       .then(response => {
         // console.log(response.data);
-        if (response.data.status === true) {
+        if (response.data.status == true) {
           Alert.alert('Details updated successfully');
         } else {
           Alert.alert('Sorry! Details not updated.');

@@ -58,4 +58,9 @@ export default styles = StyleSheet.create({
   title: {
     fontSize: 18,
   },
+  titleView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    margin: 5,
+  },
 });
