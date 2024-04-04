@@ -30,6 +30,8 @@ const AddNewLead = ({navigation}) => {
   const [accountType, setAccountType] = useState('');
   const [accountTypeList, setAccountTypeList] = useState([]);
   const [industryType, setIndustryType] = useState('');
+  const [services, setServices] = useState('');
+  const [gstNo, setGstNo] = useState('');
   const [industryTypeList, setIndustryTypeList] = useState([]);
   const [country, setCountry] = useState('');
   const [countryList, setCountryList] = useState([]);
@@ -39,13 +41,13 @@ const AddNewLead = ({navigation}) => {
   const [stateId, setStateId] = useState();
   const [city, setCity] = useState('');
   const [cityList, setCityList] = useState([]);
+  const [cityId, setCityId] = useState();
   const [title, setTitle] = useState('');
   const [addTitle, setAddTitle] = useState('');
   const [titleList, setTitleList] = useState([]);
   const [addTitleList, setAddTitleList] = useState([]);
+  const [name, setName] = useState('');
   const [address, setAddress] = useState('');
-  const [pinCode, setPinCode] = useState('');
-  const [websiteInfo, setWebsiteInfo] = useState('');
   const [poc, setPoc] = useState('');
   const [addPoc, setAddPoc] = useState('');
   const [designation, setDesignation] = useState('');
@@ -62,7 +64,7 @@ const AddNewLead = ({navigation}) => {
   const [addInstagram, setAddInstagram] = useState('');
   const [facebook, setFacebook] = useState('');
   const [addFacebook, setAddFacebook] = useState('');
-  const [accountCrd, setAccountCrd] = useState('');
+  const [accountSbmt, setAccountSbmt] = useState('');
   const [account, setAccount] = useState('');
   const [accountList, setAccountList] = useState([]);
   const [showAdditionalPOC, setShowAdditionalPOC] = useState(false);
@@ -82,7 +84,6 @@ const AddNewLead = ({navigation}) => {
           if (response.data && response.data.status === true) {
             setAccountTypeList(response.data.data);
             setAccountModalVisible(!isAccountModalVisible);
-            // console.log(response.data.data);
           } else {
             Alert.alert('Invalid Details !');
           }
@@ -105,7 +106,6 @@ const AddNewLead = ({navigation}) => {
           if (response.data && response.data.status === true) {
             setIndustryTypeList(response.data.Industry_Data);
             setIndustryModalVisible(!isIndustryModalVisible);
-            // console.log(response.data.Industry_Data);
           } else {
             Alert.alert('Invalid Details !');
           }
@@ -126,7 +126,6 @@ const AddNewLead = ({navigation}) => {
       })
         .then(response => {
           if (response.data && response.data.error === 'false') {
-            // console.log(response.data.users);
             setAccountList(response.data.users);
             setAccountCreatedModalVisible(!isAccountCreatedModalVisible);
           } else {
@@ -171,7 +170,6 @@ const AddNewLead = ({navigation}) => {
       })
         .then(response => {
           if (response.data.error === 'false') {
-            // console.log(response.data.users);
             setStateList(response.data.users);
             setStateModalVisible(!isStateModalVisible);
           }
@@ -215,7 +213,6 @@ const AddNewLead = ({navigation}) => {
           if (response.data && response.data.status === true) {
             setTitleList(response.data.Title_Data);
             setTitleModalVisible(!isTitleModalVisible);
-            // console.log(response.data.Title_Data);
           } else {
             Alert.alert('Invalid Details !');
           }
@@ -238,7 +235,6 @@ const AddNewLead = ({navigation}) => {
           if (response.data && response.data.status === true) {
             setAddTitleList(response.data.Title_Data);
             setAddTitleModalVisible(!isAddTitleModalVisible);
-            // console.log(response.data.Title_Data);
           } else {
             Alert.alert('Invalid Details !');
           }
@@ -272,6 +268,8 @@ const AddNewLead = ({navigation}) => {
                   placeholder="Type to search Company/Organization"
                   placeholderTextColor={'grey'}
                   keyboardType="default"
+                  value={name}
+                  onChangeText={setName}
                   style={styles.textInputStyle}
                 />
               </View>
@@ -401,6 +399,8 @@ const AddNewLead = ({navigation}) => {
                   placeholder="Services"
                   placeholderTextColor={'grey'}
                   keyboardType="default"
+                  value={services}
+                  onChangeText={setServices}
                   style={styles.textInputStyle}
                 />
               </View>
@@ -412,6 +412,8 @@ const AddNewLead = ({navigation}) => {
                   placeholder="Enter GST No"
                   placeholderTextColor={'grey'}
                   keyboardType="default"
+                  value={gstNo}
+                  onChangeText={setGstNo}
                   style={styles.textInputStyle}
                 />
               </View>
@@ -483,6 +485,8 @@ const AddNewLead = ({navigation}) => {
                   placeholder="Enter Address"
                   placeholderTextColor={'grey'}
                   keyboardType="default"
+                  value={address}
+                  onChangeText={setAddress}
                   style={styles.textInputStyle}
                 />
               </View>
@@ -636,6 +640,7 @@ const AddNewLead = ({navigation}) => {
                           <Pressable
                             onPress={() => {
                               setCity(c.cityName);
+                              setCityId(c.id);
                               setCityModalVisible(false);
                             }}
                             key={i}
@@ -675,6 +680,8 @@ const AddNewLead = ({navigation}) => {
                 <TextInput
                   placeholderTextColor={'grey'}
                   keyboardType="default"
+                  value={poc}
+                  onChangeText={setPoc}
                   style={styles.textInputStyle}
                 />
               </View>
@@ -685,6 +692,8 @@ const AddNewLead = ({navigation}) => {
                 <TextInput
                   placeholderTextColor={'grey'}
                   keyboardType="default"
+                  value={designation}
+                  onChangeText={setDesignation}
                   style={styles.textInputStyle}
                 />
               </View>
@@ -754,6 +763,8 @@ const AddNewLead = ({navigation}) => {
                 <TextInput
                   placeholderTextColor={'grey'}
                   keyboardType="default"
+                  value={email}
+                  onChangeText={setEmail}
                   style={styles.textInputStyle}
                 />
               </View>
@@ -764,6 +775,8 @@ const AddNewLead = ({navigation}) => {
                 <TextInput
                   placeholderTextColor={'grey'}
                   keyboardType="default"
+                  value={mobile}
+                  onChangeText={setMobile}
                   style={styles.textInputStyle}
                 />
               </View>
@@ -774,6 +787,8 @@ const AddNewLead = ({navigation}) => {
                 <TextInput
                   placeholderTextColor={'grey'}
                   keyboardType="default"
+                  value={landline}
+                  onChangeText={setLandline}
                   style={styles.textInputStyle}
                 />
               </View>
@@ -784,6 +799,8 @@ const AddNewLead = ({navigation}) => {
                 <TextInput
                   placeholderTextColor={'grey'}
                   keyboardType="default"
+                  value={linkedin}
+                  onChangeText={setLinkedin}
                   style={styles.textInputStyle}
                 />
               </View>
@@ -794,6 +811,8 @@ const AddNewLead = ({navigation}) => {
                 <TextInput
                   placeholderTextColor={'grey'}
                   keyboardType="default"
+                  value={instagram}
+                  onChangeText={setInstagram}
                   style={styles.textInputStyle}
                 />
               </View>
@@ -804,6 +823,8 @@ const AddNewLead = ({navigation}) => {
                 <TextInput
                   placeholderTextColor={'grey'}
                   keyboardType="default"
+                  value={facebook}
+                  onChangeText={setFacebook}
                   style={styles.textInputStyle}
                 />
               </View>
@@ -814,6 +835,8 @@ const AddNewLead = ({navigation}) => {
                 <TextInput
                   placeholderTextColor={'grey'}
                   keyboardType="default"
+                  value={accountSbmt}
+                  onChangeText={setAccountSbmt}
                   style={styles.textInputStyle}
                 />
               </View>
@@ -992,7 +1015,39 @@ const AddNewLead = ({navigation}) => {
                 <Text style={styles.firstButtonText}>Previous</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => navigation.navigate('ConvertToLead')}
+                onPress={() =>
+                  navigation.navigate('ConvertToLead', {
+                    name,
+                    accountType,
+                    industryType,
+                    services,
+                    gstNo,
+                    account,
+                    address,
+                    countryId,
+                    stateId,
+                    cityId,
+                    poc,
+                    designation,
+                    title,
+                    email,
+                    mobile,
+                    landline,
+                    linkedin,
+                    instagram,
+                    facebook,
+                    accountSbmt,
+                    addPoc,
+                    addDesignation,
+                    addTitle,
+                    addEmail,
+                    addMobile,
+                    addLandline,
+                    addlinkedin,
+                    addInstagram,
+                    addFacebook,
+                  })
+                }
                 style={styles.secondButton}>
                 <Text style={styles.secondButtonText}>Next</Text>
               </TouchableOpacity>

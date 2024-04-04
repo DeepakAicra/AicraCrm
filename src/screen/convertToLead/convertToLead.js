@@ -15,6 +15,7 @@ import Header from '../../component/generalHeader/header';
 import Modal from 'react-native-modal';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import {useRoute} from '@react-navigation/native';
 
 const ConvertToLead = ({navigation}) => {
   const [isServiceModalVisible, setServiceModalVisible] = useState(false);
@@ -34,6 +35,39 @@ const ConvertToLead = ({navigation}) => {
   const [dateOfBirth, setDateOfBirth] = useState('');
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
+  const {
+    params: {
+      name,
+      accountType,
+      industryType,
+      services,
+      gstNo,
+      account,
+      address,
+      countryId,
+      stateId,
+      cityId,
+      poc,
+      designation,
+      title,
+      email,
+      mobile,
+      landline,
+      linkedin,
+      instagram,
+      facebook,
+      accountSbmt,
+      addPoc,
+      addDesignation,
+      addTitle,
+      addEmail,
+      addMobile,
+      addLandline,
+      addlinkedin,
+      addInstagram,
+      addFacebook,
+    },
+  } = useRoute();
 
   const toggleServiceModal = () => {
     setServiceModalVisible(!isServiceModalVisible);

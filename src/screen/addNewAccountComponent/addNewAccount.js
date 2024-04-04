@@ -17,7 +17,6 @@ import Modal from 'react-native-modal';
 import axios from 'axios';
 import {API_URL} from '../../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import DropdownSearchBar from '../../component/customSearchBar';
 
 const AddNewAccount = ({navigation}) => {
   const [isAccountModalVisible, setAccountModalVisible] = useState(false);
@@ -46,6 +45,7 @@ const AddNewAccount = ({navigation}) => {
   const [stateId, setStateId] = useState();
   const [city, setCity] = useState('');
   const [cityList, setCityList] = useState([]);
+  const [cityId, setCityId] = useState();
   const [address, setAddress] = useState('');
   const [pinCode, setPinCode] = useState('');
   const [websiteInfo, setWebsiteInfo] = useState('');
@@ -89,18 +89,18 @@ const AddNewAccount = ({navigation}) => {
     getUserData();
   }, []);
 
-  const handleSearch = async () => {
-    try {
-      const response = await axios.get(
-        `${API_URL}/Find_Account?Account_Name=${name}`,
-      );
-      console.log(response.data);
-      setName('');
-    } catch (error) {
-      Alert.alert('Error', 'Failed to fetch data');
-      console.error(error);
-    }
-  };
+  // const handleSearch = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `${API_URL}/Find_Account?Account_Name=${name}`,
+  //     );
+  //     console.log(response.data);
+  //     setName('');
+  //   } catch (error) {
+  //     Alert.alert('Error', 'Failed to fetch data');
+  //     console.error(error);
+  //   }
+  // };
 
   const toggleAccoutModal = () => {
     if (!isAccountModalVisible) {
@@ -116,7 +116,6 @@ const AddNewAccount = ({navigation}) => {
           if (response.data && response.data.status === true) {
             setAccountTypeList(response.data.data);
             setAccountModalVisible(!isAccountModalVisible);
-            // console.log(response.data.data);
           } else {
             Alert.alert('Invalid Details !');
           }
@@ -139,7 +138,6 @@ const AddNewAccount = ({navigation}) => {
           if (response.data && response.data.status === true) {
             setIndustryTypeList(response.data.Industry_Data);
             setIndustryModalVisible(!isIndustryModalVisible);
-            // console.log(response.data.Industry_Data);
           } else {
             Alert.alert('Invalid Details !');
           }
@@ -184,7 +182,6 @@ const AddNewAccount = ({navigation}) => {
           if (response.data.error === 'false') {
             setStateList(response.data.users);
             setStateModalVisible(!isStateModalVisible);
-            // console.log(response.data.users);
           }
         })
         .catch(error => console.log(error));
@@ -205,7 +202,6 @@ const AddNewAccount = ({navigation}) => {
           if (response.data.error === 'false') {
             setCityList(response.data.users);
             setCityModalVisible(!isCityModalVisible);
-            // console.log(response.data.users);
           }
         })
         .catch(error => console.log(error));
@@ -225,7 +221,6 @@ const AddNewAccount = ({navigation}) => {
         .then(response => {
           if (response.data && response.data.status === true) {
             setTitleList(response.data.Title_Data);
-            // console.log(response.data.Title_Data);
             setTitleModalVisible(!isTitleModalVisible);
           } else {
             Alert.alert('Invalid Details !');
@@ -249,7 +244,6 @@ const AddNewAccount = ({navigation}) => {
           if (response.data && response.data.status === true) {
             setAddTitleList(response.data.Title_Data);
             setAddTitleModalVisible(!isAddTitleModalVisible);
-            // console.log(response.data.Title_Data);
           } else {
             Alert.alert('Invalid Details !');
           }
@@ -270,7 +264,6 @@ const AddNewAccount = ({navigation}) => {
       })
         .then(response => {
           if (response.data && response.data.error === 'false') {
-            // console.log(response.data.users);
             setAccountList(response.data.users);
             setAccountAssignedModalVisible(!isAccountAssignedModalVisible);
           } else {
@@ -283,14 +276,14 @@ const AddNewAccount = ({navigation}) => {
 
   const onSubmit = () => {
     let formData = new FormData();
-    formData.append('emp_id', account);
+    formData.append('emp_id', empId);
     formData.append('accountid', accountId);
     formData.append('Account_Name', name);
     formData.append('txtaddress', address);
     formData.append('Account_Type', accountType);
-    formData.append('country', country);
-    formData.append('state', state);
-    formData.append('city', city);
+    formData.append('country', countryId);
+    formData.append('state', stateId);
+    formData.append('city', cityId);
     formData.append('Industry', industryType);
     formData.append('companyservices', services);
     formData.append('pin', pinCode);
@@ -326,8 +319,14 @@ const AddNewAccount = ({navigation}) => {
       },
     })
       .then(response => {
-        if (response.data.status === true) {
-          Alert.alert('Details updated successfully');
+        if (response.data.status) {
+          console.log(response.data.status);
+          Alert.alert('Details saved successfully', '', [
+            {
+              text: 'OK',
+              onPress: () => navigation.goBack(),
+            },
+          ]);
         } else {
           Alert.alert('Failed to update details');
         }
@@ -342,8 +341,6 @@ const AddNewAccount = ({navigation}) => {
     setShowAdditionalPOC(!showAdditionalPOC);
   };
 
-  const data = ['Apple', 'Banana', 'Orange', 'Pineapple', 'Mango'];
-
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -356,21 +353,17 @@ const AddNewAccount = ({navigation}) => {
           textColor={'#ffffff'}
           onPress={() => navigation.goBack()}
         />
-        <DropdownSearchBar data={data}/>
         <ScrollView>
           <View style={styles.mainView}>
             <View style={styles.selectedItemView}>
               <Text style={styles.titleTextBox}>Account Name*</Text>
-              <Pressable
-                onPress={handleSearch}
-                style={styles.textInputContainer}>
+              <Pressable style={styles.textInputContainer}>
                 <TextInput
                   placeholder="Type to search Company/Organization"
                   placeholderTextColor={'grey'}
                   keyboardType="default"
                   value={name}
                   onChangeText={setName}
-                  onSubmitEditing={handleSearch}
                   style={styles.textInputStyle}
                 />
               </Pressable>
@@ -667,6 +660,7 @@ const AddNewAccount = ({navigation}) => {
                           <Pressable
                             onPress={() => {
                               setCity(c.cityName);
+                              setCityId(c.id);
                               setCityModalVisible(false);
                             }}
                             key={i}
