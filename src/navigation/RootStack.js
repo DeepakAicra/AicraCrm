@@ -17,6 +17,7 @@ import Schedule from '../screen/scheduleComponent/schedule';
 import Settings from '../screen/settingComponent/settings';
 import GlobalSearch from '../screen/globalSearchComponent/globalSearch';
 import ConvertToLead from '../screen/convertToLead/convertToLead';
+import EditUpdateContact from '../screen/updateContactComponent/editUpdateContact';
 
 const Stack = createStackNavigator();
 
@@ -40,6 +41,7 @@ const AuthStack = () => {
       <Stack.Screen name="Settings" component={Settings} />
       <Stack.Screen name="GlobalSearch" component={GlobalSearch} />
       <Stack.Screen name="ConvertToLead" component={ConvertToLead} />
+      <Stack.Screen name="EditUpdateContact" component={EditUpdateContact} />
     </Stack.Navigator>
   );
 };

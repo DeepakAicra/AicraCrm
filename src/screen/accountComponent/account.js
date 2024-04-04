@@ -137,19 +137,9 @@ const Account = ({navigation}) => {
               )}
             </ScrollView>
             <View style={styles.titleView}>
-              <Text style={{fontSize: 18, fontWeight: 500, color: 'white'}}>
-                Lead Entries
+              <Text style={styles.accountList}>
+                Account List
               </Text>
-              <TouchableOpacity onPress={handleLeadEntriesPress}>
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontWeight: 'bold',
-                    color: '#06b6df',
-                  }}>
-                  See More
-                </Text>
-              </TouchableOpacity>
             </View>
             {loading ? (
               <View style={styles.loadingContainer}>
@@ -184,6 +174,14 @@ const Account = ({navigation}) => {
                       ))}
               </>
             )}
+            <TouchableOpacity
+              style={styles.seeMoreTouch}
+              onPress={handleLeadEntriesPress}>
+              <Text
+                style={styles.seeMoreTxt}>
+                See More...
+              </Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </View>

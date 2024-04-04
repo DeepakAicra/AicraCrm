@@ -13,8 +13,10 @@ import Header from '../../component/generalHeader/header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {API_URL} from '../../config';
+import {useRoute} from '@react-navigation/native';
 
-const AddNewContact = ({navigation}) => {
+const EditUpdateContact = ({navigation}) => {
+  const [id, setId] = useState('');
   const [empId, setEmpId] = useState('');
   const [name, setName] = useState('');
   const [organization, setOrganization] = useState('');
@@ -25,8 +27,21 @@ const AddNewContact = ({navigation}) => {
   const [linkedin, setLinkedin] = useState('');
   const [twitter, setTwitter] = useState('');
   const [remarks, setRemarks] = useState('');
+  const {
+    params: {item},
+  } = useRoute();
 
   useEffect(() => {
+    setId(item.id);
+    setName(item.name);
+    setOrganization(item.organization);
+    setEmail(item.email);
+    setPhone(item.phoneno);
+    setAltPhone(item.altphoneno);
+    setFacebook(item.facebook);
+    setLinkedin(item.linkedin);
+    setTwitter(item.twitter);
+    setRemarks(item.remarks);
     getUserData();
   }, []);
 
@@ -39,13 +54,14 @@ const AddNewContact = ({navigation}) => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleLogin = () => {
     if (!name || !organization || !email || !phone) {
       Alert.alert('Please fill in all required fields');
       return;
     }
 
     const formData = new FormData();
+    formData.append('id', id);
     formData.append('emp_id', empId);
     formData.append('name', name);
     formData.append('organization', organization);
@@ -58,7 +74,7 @@ const AddNewContact = ({navigation}) => {
     formData.append('remarks', remarks);
 
     axios({
-      url: API_URL + 'New_Contact',
+      url: API_URL + 'Contact_Update',
       method: 'POST',
       data: formData,
       headers: {
@@ -68,14 +84,14 @@ const AddNewContact = ({navigation}) => {
     })
       .then(response => {
         if (response.data.status) {
-          Alert.alert('Details saved successfully', '', [
+          Alert.alert('Details updated successfully', '', [
             {
               text: 'OK',
               onPress: () => navigation.goBack(),
             },
           ]);
         } else {
-          Alert.alert('Sorry! Details Saved.');
+          Alert.alert('Sorry! Details not updated.');
         }
       })
       .catch(error => {
@@ -91,6 +107,7 @@ const AddNewContact = ({navigation}) => {
         }
       });
   };
+
   const handleCancel = () => {};
 
   return (
@@ -101,7 +118,7 @@ const AddNewContact = ({navigation}) => {
         <Header
           backgroundColor={'#054767'}
           iconName={'chevron-left'}
-          title={'Add Contact'}
+          title={'Edit & Update Contact'}
           textColor={'#ffffff'}
           onPress={() => navigation.goBack()}
         />
@@ -231,7 +248,7 @@ const AddNewContact = ({navigation}) => {
             </View>
           </View>
           <View style={styles.combineButtonView}>
-            <TouchableOpacity onPress={handleSubmit} style={styles.firstButton}>
+            <TouchableOpacity onPress={handleLogin} style={styles.firstButton}>
               <Text style={styles.firstButtonText}>Save</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -246,4 +263,4 @@ const AddNewContact = ({navigation}) => {
   );
 };
 
-export default AddNewContact;
+export default EditUpdateContact;

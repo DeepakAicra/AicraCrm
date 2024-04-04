@@ -116,31 +116,19 @@ const Contact = ({navigation}) => {
               ) : null}
               {contactInfoList ? (
                 <Square
-                  title="Contact Added Today Month"
+                  title="Contact Added This Month"
                   value={contactInfoList.Contacts_Added_This_Month}
                 />
               ) : null}
               {contactInfoList ? (
                 <Square
-                  title="Contact Added Today Year"
+                  title="Contact Added This Year"
                   value={contactInfoList.Contacts_Added_This_Year}
                 />
               ) : null}
             </ScrollView>
             <View style={styles.titleView}>
-              <Text style={{fontSize: 18, fontWeight: 500, color: 'white'}}>
-                Lead Entries
-              </Text>
-              <TouchableOpacity onPress={handleLeadEntriesPress}>
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontWeight: 'bold',
-                    color: '#06b6df',
-                  }}>
-                  See More
-                </Text>
-              </TouchableOpacity>
+              <Text style={styles.CountactList}>Contact List</Text>
             </View>
             {loading ? (
               <View style={styles.loadingContainer}>
@@ -156,7 +144,7 @@ const Contact = ({navigation}) => {
                         mobile={item.phoneno}
                         email={item.email}
                         edit={() =>
-                          navigation.navigate('AddNewContact', {item})
+                          navigation.navigate('EditUpdateContact', {item})
                         }
                         call={() => handleCall(item.phoneno)}
                         sendMail={() => handleSendMail(item.email)}
@@ -172,7 +160,7 @@ const Contact = ({navigation}) => {
                           mobile={item.phoneno}
                           email={item.email}
                           edit={() =>
-                            navigation.navigate('AddNewContact', {item})
+                            navigation.navigate('EditUpdateContact', {item})
                           }
                           call={() => handleCall(item.phoneno)}
                           sendMail={() => handleSendMail(item.email)}
@@ -181,6 +169,11 @@ const Contact = ({navigation}) => {
                       ))}
               </>
             )}
+            <TouchableOpacity
+              style={styles.seeMoreTouch}
+              onPress={handleLeadEntriesPress}>
+              <Text style={styles.seeMoreTxt}>See More...</Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </View>

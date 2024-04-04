@@ -41,8 +41,21 @@ export default styles = StyleSheet.create({
     backgroundColor: 'grey',
   },
   titleView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    margin: 5,
+    padding: 10,
+  },
+  CountactList: {
+    fontSize: 18,
+    fontWeight: '500',
+    color: 'white',
+  },
+  seeMoreTouch: {
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    margin: 10,
+  },
+  seeMoreTxt: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#06b6df',
   },
 });
