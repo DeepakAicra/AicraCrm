@@ -258,7 +258,7 @@ const CustomDrawer = props => {
               }}
             />
           )}
-          {LeadsDrawerItem == true && (
+          {/* {LeadsDrawerItem == true && (
             <DrawerItem
               //   focused={focus == 1 ? true : false}
               pressColor={Colors.azure}
@@ -278,8 +278,8 @@ const CustomDrawer = props => {
                 props.navigation.navigate('GlobalSearch');
               }}
             />
-          )}
-          <DrawerItem
+          )} */}
+          {/* <DrawerItem
             // focused={focus == 1 ? true : false}
             pressColor={Colors.azure}
             activeTintColor="#b30059"
@@ -356,7 +356,7 @@ const CustomDrawer = props => {
                 // props.navigation.navigate('dailyRecommendation');
               }}
             />
-          )}
+          )} */}
 
           <DrawerItem
             // focused={focus == 1 ? true : false}
@@ -382,7 +382,7 @@ const CustomDrawer = props => {
             }}
           />
 
-          <DrawerItem
+          {/* <DrawerItem
             // focused={focus == 1 ? true : false}
             pressColor={Colors.azure}
             activeTintColor="#b30059"
@@ -644,7 +644,7 @@ const CustomDrawer = props => {
               </Text>
             )}
             onPress={logout}
-          />
+          /> */}
         </View>
       </DrawerContentScrollView>
     </SafeAreaView>

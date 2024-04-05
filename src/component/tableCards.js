@@ -1,5 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const TableCard = ({title, mobile, email, edit, call, sendMail, whatsApp}) => {
   const firstCharacter = title.charAt(0);
@@ -21,31 +23,50 @@ const TableCard = ({title, mobile, email, edit, call, sendMail, whatsApp}) => {
         </View>
       </View>
       <View style={styles.actions}>
-        <Text style={styles.action}>Convert to Lead</Text>
-        <TouchableOpacity onPress={edit}>
-          <Image
-            source={require('../Assets/Images/pencil-square-icon.png')}
-            style={styles.actionImage}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={call}>
-          <Image
-            source={require('../Assets/Images/call-icon.png')}
-            style={styles.actionImage}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={sendMail}>
-          <Image
-            source={require('../Assets/Images/red-mail-icon.png')}
-            style={styles.actionImage}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={whatsApp}>
-          <Image
-            source={require('../Assets/Images/whatsapp-color-icon.png')}
-            style={styles.actionImage}
-          />
-        </TouchableOpacity>
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity onPress={edit}>
+            <MaterialIcons
+              name="edit-square"
+              size={18}
+              color="black"
+              style={styles.actionImage}
+            />
+          </TouchableOpacity>
+          <Text style={styles.action}>Edit</Text>
+        </View>
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity onPress={call}>
+            <MaterialIcons
+              name="call"
+              size={18}
+              color="#33a867"
+              style={styles.actionImage}
+            />
+          </TouchableOpacity>
+          <Text style={styles.action}>Call</Text>
+        </View>
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity onPress={sendMail}>
+            <MaterialIcons
+              name="email"
+              size={18}
+              color="#f2555f"
+              style={styles.actionImage}
+            />
+          </TouchableOpacity>
+          <Text style={styles.action}>Email</Text>
+        </View>
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity onPress={whatsApp}>
+            <FontAwesome
+              name="whatsapp"
+              size={18}
+              color="#25d366"
+              style={styles.actionImage}
+            />
+          </TouchableOpacity>
+          <Text style={styles.action}>What's App</Text>
+        </View>
       </View>
     </View>
   );
@@ -103,6 +124,7 @@ const styles = StyleSheet.create({
   action: {
     color: '#007bff',
     fontSize: 14,
+    marginHorizontal: 4,
   },
   actionImage: {
     width: 18,

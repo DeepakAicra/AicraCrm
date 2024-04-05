@@ -284,7 +284,7 @@ const Dashboard = () => {
                   />
                 ) : null}
               </ScrollView>
-              <Text style={{fontSize: 18, fontWeight: 500, color: 'white'}}>
+              {/* <Text style={{fontSize: 18, fontWeight: 500, color: 'white'}}>
                 Monthly Working Report
               </Text>
               <ScrollView horizontal>
@@ -299,8 +299,8 @@ const Dashboard = () => {
                   value="120"
                   onPress={() => {}}
                 />
-              </ScrollView>
-              <Text style={{fontSize: 18, fontWeight: 500, color: 'white'}}>
+              </ScrollView> */}
+              {/* <Text style={{fontSize: 18, fontWeight: 500, color: 'white'}}>
                 Revenue Target
               </Text>
               <ScrollView horizontal>
@@ -315,7 +315,7 @@ const Dashboard = () => {
                   value="0"
                   onPress={() => {}}
                 />
-              </ScrollView>
+              </ScrollView> */}
             </View>
           </View>
         </ScrollView>

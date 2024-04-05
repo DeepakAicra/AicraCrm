@@ -9,13 +9,16 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import styles from './styles';
 import Header from '../../component/generalHeader/header';
 import Modal from 'react-native-modal';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {useRoute} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import {API_URL} from '../../config';
 
 const ConvertToLead = ({navigation}) => {
   const [isServiceModalVisible, setServiceModalVisible] = useState(false);
@@ -24,17 +27,24 @@ const ConvertToLead = ({navigation}) => {
   const [isTypeModalVisible, setTypeModalVisible] = useState(false);
   const [isAssignedModalVisible, setAssignedModalVisible] = useState(false);
   const [isUserModalVisible, setUserModalVisible] = useState(false);
+  const [empId, setEmpId] = useState('');
   const [service, setService] = useState('');
   const [serviceList, setServiceList] = useState([]);
   const [status, setStatus] = useState('');
+  const [statusList, setStatusList] = useState([]);
   const [invoice, setInvoice] = useState('');
+  const [rcaInvoiceList, setRcaInvoiceList] = useState([]);
   const [discussType, setDiscussType] = useState('');
+  const [discussTypeList, setDiscussTypeList] = useState([]);
   const [assigned, setAssigned] = useState('');
+  const [assignedList, setAssignedList] = useState([]);
   const [user, setUser] = useState('');
+  const [userList, setUserList] = useState([]);
   const [value, onChangeText] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
+  const userType = 'Sales';
   const {
     params: {
       name,
@@ -69,28 +79,179 @@ const ConvertToLead = ({navigation}) => {
     },
   } = useRoute();
 
+  const getUserData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('userId');
+      if (value !== null) {
+        return value;
+      } else {
+        throw new Error('User ID not found in AsyncStorage');
+      }
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const userId = await getUserData();
+      if (userId) {
+        setEmpId(userId);
+      }
+    };
+    fetchData();
+  }, []);
+
   const toggleServiceModal = () => {
-    setServiceModalVisible(!isServiceModalVisible);
+    if (!isServiceModalVisible) {
+      axios({
+        url: `${API_URL}Select_Services?empid=${empId}`,
+        method: 'get',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+        .then(response => {
+          if (response.data && response.data.status === true) {
+            setServiceList(response.data.service_data);
+            setServiceModalVisible(!isServiceModalVisible);
+          } else {
+            Alert.alert('Invalid Details !');
+          }
+        })
+        .catch(error => console.log(error));
+    }
+  };
+
+  const handleServicePack = () => {
+    axios({
+      url: `${API_URL}Select_Service_Packages_Lead?service_packages=${service}`,
+      method: 'get',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+      .then(response => {
+        if (response.data && response.data.status === true) {
+          console.log(response.data.service_packages_data);
+        } else {
+          Alert.alert('Invalid Details !');
+        }
+      })
+      .catch(error => console.log(error));
   };
 
   const toggleStatusModal = () => {
-    setStatusModalVisible(!isStatusModalVisible);
+    if (!isStatusModalVisible) {
+      axios({
+        url: API_URL + 'Lead_Status',
+        method: 'get',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+        .then(response => {
+          if (response.data && response.data.status === true) {
+            setStatusList(response.data.data);
+            setStatusModalVisible(!isStatusModalVisible);
+          } else {
+            Alert.alert('Invalid Details !');
+          }
+        })
+        .catch(error => console.log(error));
+    }
   };
 
   const toggleInvoiceModal = () => {
-    setInvoiceModalVisible(!isInvoiceModalVisible);
+    if (!isInvoiceModalVisible) {
+      axios({
+        url: API_URL + 'RCA_Invoice_Type',
+        method: 'get',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+        .then(response => {
+          if (response.data && response.data.status === true) {
+            setRcaInvoiceList(Object.keys(response.data.Title_Data));
+            setInvoiceModalVisible(!isInvoiceModalVisible);
+          } else {
+            Alert.alert('Invalid Details !');
+          }
+        })
+        .catch(error => console.log(error));
+    }
   };
 
   const toggleTypeModal = () => {
-    setTypeModalVisible(!isTypeModalVisible);
+    if (!isTypeModalVisible) {
+      axios({
+        url: API_URL + 'Lead_Discussion_Type',
+        method: 'get',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+        .then(response => {
+          if (response.data && response.data.status === true) {
+            setDiscussTypeList(response.data.Lead_Discussion_Type);
+            setTypeModalVisible(!isTypeModalVisible);
+          } else {
+            Alert.alert('Invalid Details !');
+          }
+        })
+        .catch(error => console.log(error));
+    }
   };
 
   const toggleAssignedModal = () => {
-    setAssignedModalVisible(!isAssignedModalVisible);
+    if (!isAssignedModalVisible) {
+      axios({
+        url: `${API_URL}Lead_Assigned?empid=${empId}`,
+        method: 'get',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+        .then(response => {
+          if (response.data && response.data.status === true) {
+            setAssignedList(Object.keys(response.data.Title_Data));
+            setAssignedModalVisible(!isAssignedModalVisible);
+          } else {
+            Alert.alert('Invalid Details !');
+          }
+        })
+        .catch(error => console.log(error));
+    }
   };
 
   const toggleUserModal = () => {
-    setUserModalVisible(!isUserModalVisible);
+    if (!isUserModalVisible) {
+      axios({
+        url: `${API_URL}User_List?usertype=${userType}`,
+        method: 'get',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+        .then(response => {
+          if (response.data && response.data.error === 'false') {
+            setUserList(response.data.users);
+            setUserModalVisible(!isUserModalVisible);
+          } else {
+            Alert.alert('Invalid Details !');
+          }
+        })
+        .catch(error => console.log(error));
+    }
   };
 
   const toggleDatePicker = () => {
@@ -158,21 +319,23 @@ const ConvertToLead = ({navigation}) => {
                     <View style={styles.headerView}>
                       <Text style={styles.headerText}>Select Service</Text>
                     </View>
-                    {/* {serviceList.length ? (
-                <FlatList
-                  data={serviceList}
-                  renderItem={({item}) => (
-                    <Pressable
-                      onPress={() => {
-                        setService(item);
-                        setServiceModalVisible(false);
-                      }}
-                      style={styles.contentmainView}>
-                      <Text style={styles.contentText}>{item}</Text>
-                    </Pressable>
-                  )}
-                />
-              ) : null} */}
+                    <ScrollView>
+                      {serviceList?.map((a, i) => {
+                        return (
+                          <Pressable
+                            onPress={() => {
+                              setService(a.services_interested);
+                              setServiceModalVisible(false);
+                            }}
+                            key={i}
+                            style={styles.contentmainView}>
+                            <Text style={styles.contentText}>
+                              {a.services_interested}
+                            </Text>
+                          </Pressable>
+                        );
+                      })}
+                    </ScrollView>
                   </View>
                 </Modal>
                 <Pressable
@@ -203,6 +366,7 @@ const ConvertToLead = ({navigation}) => {
                 <TextInput
                   editable
                   multiline
+                  onPressIn={handleServicePack}
                   numberOfLines={4}
                   maxLength={10}
                   onChangeText={text => onChangeText(text)}
@@ -253,6 +417,21 @@ const ConvertToLead = ({navigation}) => {
                     <View style={styles.headerView}>
                       <Text style={styles.headerText}>Status</Text>
                     </View>
+                    {statusList.length ? (
+                      <FlatList
+                        data={statusList}
+                        renderItem={({item}) => (
+                          <Pressable
+                            onPress={() => {
+                              setStatus(item);
+                              setStatusModalVisible(false);
+                            }}
+                            style={styles.contentmainView}>
+                            <Text style={styles.contentText}>{item}</Text>
+                          </Pressable>
+                        )}
+                      />
+                    ) : null}
                   </View>
                 </Modal>
                 <Pressable
@@ -297,6 +476,21 @@ const ConvertToLead = ({navigation}) => {
                     <View style={styles.headerView}>
                       <Text style={styles.headerText}>Invoice</Text>
                     </View>
+                    {rcaInvoiceList.length ? (
+                      <FlatList
+                        data={rcaInvoiceList}
+                        renderItem={({item}) => (
+                          <Pressable
+                            onPress={() => {
+                              setInvoice(item);
+                              setInvoiceModalVisible(false);
+                            }}
+                            style={styles.contentmainView}>
+                            <Text style={styles.contentText}>{item}</Text>
+                          </Pressable>
+                        )}
+                      />
+                    ) : null}
                   </View>
                 </Modal>
                 <Pressable
@@ -395,6 +589,21 @@ const ConvertToLead = ({navigation}) => {
                     <View style={styles.headerView}>
                       <Text style={styles.headerText}>Discussion Type</Text>
                     </View>
+                    {discussTypeList.length ? (
+                      <FlatList
+                        data={discussTypeList}
+                        renderItem={({item}) => (
+                          <Pressable
+                            onPress={() => {
+                              setDiscussType(item);
+                              setTypeModalVisible(false);
+                            }}
+                            style={styles.contentmainView}>
+                            <Text style={styles.contentText}>{item}</Text>
+                          </Pressable>
+                        )}
+                      />
+                    ) : null}
                   </View>
                 </Modal>
                 <Pressable
@@ -439,6 +648,21 @@ const ConvertToLead = ({navigation}) => {
                     <View style={styles.headerView}>
                       <Text style={styles.headerText}>Lead Assigned</Text>
                     </View>
+                    {assignedList.length ? (
+                      <FlatList
+                        data={assignedList}
+                        renderItem={({item}) => (
+                          <Pressable
+                            onPress={() => {
+                              setAssigned(item);
+                              setAssignedModalVisible(false);
+                            }}
+                            style={styles.contentmainView}>
+                            <Text style={styles.contentText}>{item}</Text>
+                          </Pressable>
+                        )}
+                      />
+                    ) : null}
                   </View>
                 </Modal>
                 <Pressable
@@ -483,6 +707,21 @@ const ConvertToLead = ({navigation}) => {
                     <View style={styles.headerView}>
                       <Text style={styles.headerText}>User</Text>
                     </View>
+                    <ScrollView>
+                      {userList?.map((a, i) => {
+                        return (
+                          <Pressable
+                            onPress={() => {
+                              setUser(a.name);
+                              setUserModalVisible(false);
+                            }}
+                            key={i}
+                            style={styles.contentmainView}>
+                            <Text style={styles.contentText}>{a.name}</Text>
+                          </Pressable>
+                        );
+                      })}
+                    </ScrollView>
                   </View>
                 </Modal>
                 <Pressable
