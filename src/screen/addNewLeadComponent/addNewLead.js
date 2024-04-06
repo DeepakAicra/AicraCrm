@@ -42,12 +42,14 @@ const AddNewLead = ({navigation}) => {
   const [city, setCity] = useState('');
   const [cityList, setCityList] = useState([]);
   const [cityId, setCityId] = useState();
+  const [pinCode, setPinCode] = useState('');
   const [title, setTitle] = useState('');
   const [addTitle, setAddTitle] = useState('');
   const [titleList, setTitleList] = useState([]);
   const [addTitleList, setAddTitleList] = useState([]);
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
+  const [websiteInfo, setWebsiteInfo] = useState('');
   const [poc, setPoc] = useState('');
   const [addPoc, setAddPoc] = useState('');
   const [designation, setDesignation] = useState('');
@@ -675,6 +677,30 @@ const AddNewLead = ({navigation}) => {
               </View>
             </View>
             <View style={styles.selectedItemView}>
+              <Text style={styles.titleTextBox}>PIN/ZIP*</Text>
+              <View style={styles.textInputContainer}>
+                <TextInput
+                  placeholderTextColor={'grey'}
+                  keyboardType="default"
+                  value={pinCode}
+                  onChangeText={setPinCode}
+                  style={styles.textInputStyle}
+                />
+              </View>
+            </View>
+            <View style={styles.selectedItemView}>
+              <Text style={styles.titleTextBox}>Website:</Text>
+              <View style={styles.textInputContainer}>
+                <TextInput
+                  placeholderTextColor={'grey'}
+                  keyboardType="default"
+                  value={websiteInfo}
+                  onChangeText={setWebsiteInfo}
+                  style={styles.textInputStyle}
+                />
+              </View>
+            </View>
+            <View style={styles.selectedItemView}>
               <Text style={styles.titleTextBox}>POC 1*</Text>
               <View style={styles.textInputContainer}>
                 <TextInput
@@ -1027,6 +1053,8 @@ const AddNewLead = ({navigation}) => {
                     countryId,
                     stateId,
                     cityId,
+                    pinCode,
+                    websiteInfo,
                     poc,
                     designation,
                     title,

@@ -19,6 +19,7 @@ import {useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {API_URL} from '../../config';
+import {Dropdown} from 'react-native-element-dropdown';
 
 const ConvertToLead = ({navigation}) => {
   const [isServiceModalVisible, setServiceModalVisible] = useState(false);
@@ -30,6 +31,9 @@ const ConvertToLead = ({navigation}) => {
   const [empId, setEmpId] = useState('');
   const [service, setService] = useState('');
   const [serviceList, setServiceList] = useState([]);
+  const [options, setOptions] = useState([]);
+  const [value, setValue] = useState(null);
+  const [isFocus, setIsFocus] = useState(false);
   const [status, setStatus] = useState('');
   const [statusList, setStatusList] = useState([]);
   const [invoice, setInvoice] = useState('');
@@ -40,11 +44,12 @@ const ConvertToLead = ({navigation}) => {
   const [assignedList, setAssignedList] = useState([]);
   const [user, setUser] = useState('');
   const [userList, setUserList] = useState([]);
-  const [value, onChangeText] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
+
   const userType = 'Sales';
+
   const {
     params: {
       name,
@@ -57,6 +62,8 @@ const ConvertToLead = ({navigation}) => {
       countryId,
       stateId,
       cityId,
+      pinCode,
+      websiteInfo,
       poc,
       designation,
       title,
@@ -78,6 +85,68 @@ const ConvertToLead = ({navigation}) => {
       addFacebook,
     },
   } = useRoute();
+
+  const onSubmit = () => {
+    let formData = new FormData();
+    formData.append('emp_id', empId);
+    formData.append('Account_Name', name);
+    formData.append('Account_Type', accountType);
+    formData.append('Industry', industryType);
+    formData.append('companyservices', services);
+    formData.append('gstno', gstNo);
+    formData.append('country', countryId);
+    formData.append('state', stateId);
+    formData.append('city', cityId);
+    formData.append('pin', pinCode);
+    formData.append('website', websiteInfo);
+    formData.append('title', title);
+    formData.append('Linkedin', linkedin);
+    formData.append('insta', instagram);
+    formData.append('facebook', facebook);
+    formData.append('poc', poc);
+    formData.append('desigination', designation);
+    formData.append('txtmobileno', mobile);
+    formData.append('txtemail', email);
+    formData.append('landlineno', landline);
+    formData.append('addpoc', addPoc);
+    formData.append('adddesigination', addDesignation);
+    formData.append('addtitle', addTitle);
+    formData.append('addemail', addEmail);
+    formData.append('addmobileno', addMobile);
+    formData.append('addlandlineno', addLandline);
+    formData.append('addLinkedin', addlinkedin);
+    formData.append('addinsta', addInstagram);
+    formData.append('addfacebook', addFacebook);
+    formData.append('Status', status);
+
+    axios({
+      url: API_URL + 'New_Account',
+      method: 'POST',
+      data: formData,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+      .then(response => {
+        if (response.data.status) {
+          console.log(response.data.status);
+          Alert.alert('Details saved successfully', '', [
+            {
+              text: 'OK',
+              onPress: () => navigation.goBack(),
+            },
+          ]);
+        } else {
+          Alert.alert('Failed to update details');
+        }
+      })
+      .catch(error => {
+        console.error('Error while updating details:', error);
+        Alert.alert('Failed to update details');
+      });
+  };
+
 
   const getUserData = async () => {
     try {
@@ -125,7 +194,7 @@ const ConvertToLead = ({navigation}) => {
     }
   };
 
-  const handleServicePack = () => {
+  useEffect(() => {
     axios({
       url: `${API_URL}Select_Service_Packages_Lead?service_packages=${service}`,
       method: 'get',
@@ -136,13 +205,13 @@ const ConvertToLead = ({navigation}) => {
     })
       .then(response => {
         if (response.data && response.data.status === true) {
-          console.log(response.data.service_packages_data);
+          setOptions(response.data.service_packages_data);
         } else {
           Alert.alert('Invalid Details !');
         }
       })
       .catch(error => console.log(error));
-  };
+  }, [service]);
 
   const toggleStatusModal = () => {
     if (!isStatusModalVisible) {
@@ -362,18 +431,35 @@ const ConvertToLead = ({navigation}) => {
             </View>
             <View style={styles.selectedItemView}>
               <Text style={styles.titleTextBox}>Service Packages:</Text>
-              <View style={styles.multiLineView}>
-                <TextInput
-                  editable
-                  multiline
-                  onPressIn={handleServicePack}
-                  numberOfLines={4}
-                  maxLength={10}
-                  onChangeText={text => onChangeText(text)}
-                  value={value}
-                  style={{padding: 10}}
-                />
-              </View>
+              <Dropdown
+                style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                inputSearchStyle={styles.inputSearchStyle}
+                iconStyle={styles.iconStyle}
+                data={options}
+                search
+                maxHeight={300}
+                labelField="service_packages"
+                valueField="id"
+                placeholder={!isFocus ? 'Select item' : '...'}
+                searchPlaceholder="Search..."
+                value={value}
+                onFocus={() => setIsFocus(true)}
+                onBlur={() => setIsFocus(false)}
+                onChange={item => {
+                  setValue(item.value);
+                  setIsFocus(false);
+                }}
+                renderLeftIcon={() => (
+                  <AntDesign
+                    style={styles.icon}
+                    color={isFocus ? 'blue' : 'black'}
+                    name="Safety"
+                    size={20}
+                  />
+                )}
+              />
             </View>
             <View style={styles.selectedItemView}>
               <Text style={styles.titleTextBox}>Discuss Amount, if any</Text>
