@@ -73,7 +73,7 @@ export default styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  iconStyle: {
+  conbineIconStyle: {
     marginRight: 10,
   },
   modal: {

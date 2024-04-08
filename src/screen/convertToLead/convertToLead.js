@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   TouchableOpacity,
+  Alert
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import styles from './styles';
@@ -34,20 +35,22 @@ const ConvertToLead = ({navigation}) => {
   const [options, setOptions] = useState([]);
   const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
+  const [offerDiscount, setOfferDiscount] = useState('');
+  const [remarks, setRemarks] = useState('');
   const [status, setStatus] = useState('');
   const [statusList, setStatusList] = useState([]);
   const [invoice, setInvoice] = useState('');
   const [rcaInvoiceList, setRcaInvoiceList] = useState([]);
+  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [date, setDate] = useState(new Date());
+  const [time, setTime] = useState('');
+  const [showPicker, setShowPicker] = useState(false);
   const [discussType, setDiscussType] = useState('');
   const [discussTypeList, setDiscussTypeList] = useState([]);
   const [assigned, setAssigned] = useState('');
   const [assignedList, setAssignedList] = useState([]);
   const [user, setUser] = useState('');
   const [userList, setUserList] = useState([]);
-  const [dateOfBirth, setDateOfBirth] = useState('');
-  const [date, setDate] = useState(new Date());
-  const [showPicker, setShowPicker] = useState(false);
-
   const userType = 'Sales';
 
   const {
@@ -73,7 +76,6 @@ const ConvertToLead = ({navigation}) => {
       linkedin,
       instagram,
       facebook,
-      accountSbmt,
       addPoc,
       addDesignation,
       addTitle,
@@ -94,20 +96,22 @@ const ConvertToLead = ({navigation}) => {
     formData.append('Industry', industryType);
     formData.append('companyservices', services);
     formData.append('gstno', gstNo);
+    formData.append('account_created_by', account);
+    formData.append('txtaddress', address);
     formData.append('country', countryId);
     formData.append('state', stateId);
     formData.append('city', cityId);
     formData.append('pin', pinCode);
     formData.append('website', websiteInfo);
+    formData.append('poc', poc);
+    formData.append('desigination', designation);
     formData.append('title', title);
+    formData.append('txtemail', email);
+    formData.append('txtmobileno', mobile);
+    formData.append('landlineno', landline);
     formData.append('Linkedin', linkedin);
     formData.append('insta', instagram);
     formData.append('facebook', facebook);
-    formData.append('poc', poc);
-    formData.append('desigination', designation);
-    formData.append('txtmobileno', mobile);
-    formData.append('txtemail', email);
-    formData.append('landlineno', landline);
     formData.append('addpoc', addPoc);
     formData.append('adddesigination', addDesignation);
     formData.append('addtitle', addTitle);
@@ -117,10 +121,20 @@ const ConvertToLead = ({navigation}) => {
     formData.append('addLinkedin', addlinkedin);
     formData.append('addinsta', addInstagram);
     formData.append('addfacebook', addFacebook);
+    formData.append('Interest', service);
+    formData.append('service_packages', value);
+    formData.append('discount_offered', offerDiscount);
+    formData.append('Remarks', remarks);
     formData.append('Status', status);
+    formData.append('rca', invoice);
+    formData.append('FollowupDate', dateOfBirth);
+    formData.append('FollowupTime', time);
+    formData.append('txttypeoflead', discussType);
+    formData.append('txtleadassign', assigned);
+    formData.append('txtusers', user);
 
     axios({
-      url: API_URL + 'New_Account',
+      url: API_URL + 'Add_New_Lead',
       method: 'POST',
       data: formData,
       headers: {
@@ -130,7 +144,7 @@ const ConvertToLead = ({navigation}) => {
     })
       .then(response => {
         if (response.data.status) {
-          console.log(response.data.status);
+          // console.log(response.data.status);
           Alert.alert('Details saved successfully', '', [
             {
               text: 'OK',
@@ -146,7 +160,6 @@ const ConvertToLead = ({navigation}) => {
         Alert.alert('Failed to update details');
       });
   };
-
 
   const getUserData = async () => {
     try {
@@ -424,7 +437,7 @@ const ConvertToLead = ({navigation}) => {
                     name={'down'}
                     size={20}
                     color={'black'}
-                    style={styles.iconStyle}
+                    style={styles.conbineIconStyle}
                   />
                 </Pressable>
               </View>
@@ -467,6 +480,8 @@ const ConvertToLead = ({navigation}) => {
                 <TextInput
                   placeholderTextColor={'grey'}
                   keyboardType="default"
+                  value={offerDiscount}
+                  onChangeText={setOfferDiscount}
                   style={styles.textInputStyle}
                 />
               </View>
@@ -479,6 +494,8 @@ const ConvertToLead = ({navigation}) => {
                   multiline
                   numberOfLines={2}
                   maxLength={2}
+                  value={remarks}
+                  onChangeText={setRemarks}
                   style={{padding: 10}}
                 />
               </View>
@@ -537,7 +554,7 @@ const ConvertToLead = ({navigation}) => {
                     name={'down'}
                     size={20}
                     color={'black'}
-                    style={styles.iconStyle}
+                    style={styles.conbineIconStyle}
                   />
                 </Pressable>
               </View>
@@ -596,7 +613,7 @@ const ConvertToLead = ({navigation}) => {
                     name={'down'}
                     size={20}
                     color={'black'}
-                    style={styles.iconStyle}
+                    style={styles.conbineIconStyle}
                   />
                 </Pressable>
               </View>
@@ -642,7 +659,7 @@ const ConvertToLead = ({navigation}) => {
                 {!showPicker && (
                   <Pressable onPress={confirmIOSDate}>
                     <TextInput
-                      placeholder="--Select DOB--"
+                      placeholder="--Select Date--"
                       placeholderTextColor={'grey'}
                       keyboardType="default"
                       editable={false}
@@ -653,6 +670,19 @@ const ConvertToLead = ({navigation}) => {
                     />
                   </Pressable>
                 )}
+              </View>
+            </View>
+            <View style={styles.selectedItemView}>
+              <Text style={styles.titleTextBox}>Time</Text>
+              <View style={styles.textInputContainer}>
+                <TextInput
+                  placeholder="HH : MM"
+                  placeholderTextColor={'grey'}
+                  keyboardType="default"
+                  value={time}
+                  onChangeText={setTime}
+                  style={styles.textInputStyle}
+                />
               </View>
             </View>
             <View style={styles.selectedItemView}>
@@ -709,7 +739,7 @@ const ConvertToLead = ({navigation}) => {
                     name={'down'}
                     size={20}
                     color={'black'}
-                    style={styles.iconStyle}
+                    style={styles.conbineIconStyle}
                   />
                 </Pressable>
               </View>
@@ -768,7 +798,7 @@ const ConvertToLead = ({navigation}) => {
                     name={'down'}
                     size={20}
                     color={'black'}
-                    style={styles.iconStyle}
+                    style={styles.conbineIconStyle}
                   />
                 </Pressable>
               </View>
@@ -827,13 +857,15 @@ const ConvertToLead = ({navigation}) => {
                     name={'down'}
                     size={20}
                     color={'black'}
-                    style={styles.iconStyle}
+                    style={styles.conbineIconStyle}
                   />
                 </Pressable>
               </View>
             </View>
             <View style={styles.saveButtonView}>
-              <TouchableOpacity style={styles.saveFirstButton}>
+              <TouchableOpacity
+                onPress={onSubmit}
+                style={styles.saveFirstButton}>
                 <Text style={styles.saveFirstButtonText}>Save</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.saveSecondButton}>

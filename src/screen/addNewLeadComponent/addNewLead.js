@@ -119,7 +119,7 @@ const AddNewLead = ({navigation}) => {
   const toggleAccountCreatedModal = () => {
     if (!isAccountCreatedModalVisible) {
       axios({
-        url: `${API_URL}User_List?usertype=${userType}`,
+        url: API_URL + 'Account_Created_By',
         method: 'get',
         headers: {
           Accept: 'application/json',
@@ -127,8 +127,9 @@ const AddNewLead = ({navigation}) => {
         },
       })
         .then(response => {
-          if (response.data && response.data.error === 'false') {
-            setAccountList(response.data.users);
+          if (response.data.status == true) {
+            console.log(response.data.data);
+            setAccountList(response.data.data);
             setAccountCreatedModalVisible(!isAccountCreatedModalVisible);
           } else {
             Alert.alert('Invalid Details !');
@@ -442,21 +443,21 @@ const AddNewLead = ({navigation}) => {
                         Select Account Created
                       </Text>
                     </View>
-                    <ScrollView>
-                      {accountList?.map((a, i) => {
-                        return (
+                    {accountList.length ? (
+                      <FlatList
+                        data={accountList}
+                        renderItem={({item}) => (
                           <Pressable
                             onPress={() => {
-                              setAccount(a.name);
+                              setAccount(item);
                               setAccountCreatedModalVisible(false);
                             }}
-                            key={i}
                             style={styles.contentmainView}>
-                            <Text style={styles.contentText}>{a.name}</Text>
+                            <Text style={styles.contentText}>{item}</Text>
                           </Pressable>
-                        );
-                      })}
-                    </ScrollView>
+                        )}
+                      />
+                    ) : null}
                   </View>
                 </Modal>
                 <Pressable
@@ -1064,7 +1065,6 @@ const AddNewLead = ({navigation}) => {
                     linkedin,
                     instagram,
                     facebook,
-                    accountSbmt,
                     addPoc,
                     addDesignation,
                     addTitle,

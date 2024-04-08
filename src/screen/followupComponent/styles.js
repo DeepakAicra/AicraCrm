@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 export default styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    // backgroundColor: '#ffffff',
   },
   mainView: {
     margin: 10,
@@ -44,7 +44,6 @@ export default styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 50,
     marginTop: 40,
-    // marginBottom: 15,
     backgroundColor: '#075985',
   },
   pickerButton: {
@@ -58,8 +57,6 @@ export default styles = StyleSheet.create({
   combineButtonView: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // marginTop: 30,
-    // backgroundColor: 'white',
     marginHorizontal: 10,
     marginVertical: 5,
   },

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, ActivityIndicator, Text} from 'react-native';
+import {View, ActivityIndicator, Text, ScrollView} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {API_URL} from '../../config';
@@ -54,18 +54,20 @@ const LeadList = ({navigation}) => {
         textColor={'#ffffff'}
         onPress={() => navigation.goBack()}
       />
-      {loading ? (
-        <ActivityIndicator size="large" color="#e61789" />
-      ) : (
-        leadDataList.map((item, index) => (
-          <TableCard
-            key={index}
-            title={item.Entity_Name}
-            mobile={item.Mobile_Number}
-            email={item.Email}
-          />
-        ))
-      )}
+      <ScrollView>
+        {loading ? (
+          <ActivityIndicator size="large" color="#e61789" />
+        ) : (
+          leadDataList.map((item, index) => (
+            <TableCard
+              key={index}
+              title={item.Entity_Name}
+              mobile={item.Mobile_Number}
+              email={item.Email}
+            />
+          ))
+        )}
+      </ScrollView>
     </View>
   );
 };
