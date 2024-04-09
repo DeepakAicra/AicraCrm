@@ -237,26 +237,25 @@ const FollowUps = ({navigation}) => {
             <Text style={styles.secondButtonText}>Clear</Text>
           </TouchableOpacity>
         </View> */}
-        <ScrollView>
-          {loading ? (
-            <ActivityIndicator size="large" color="#e61789" />
-          ) : followInfoList && followInfoList.length > 0 ? (
-            followInfoList.map((item, index) => (
-              <TableCard
-                key={index}
-                title={item.Entity_Name}
-                mobile={item.Mobile_Number}
-                email={item.Email}
-              />
-            ))
-          ) : (
-            <Text
-              style={{alignSelf: 'center', fontSize: 18, fontWeight: '500'}}>
-              No data found
-            </Text>
-          )}
-        </ScrollView>
       </View>
+      <ScrollView>
+        {loading ? (
+          <ActivityIndicator size="large" color="#e61789" />
+        ) : followInfoList && followInfoList.length > 0 ? (
+          followInfoList.map((item, index) => (
+            <TableCard
+              key={index}
+              title={item.Entity_Name}
+              mobile={item.Mobile_Number}
+              email={item.Email}
+            />
+          ))
+        ) : (
+          <Text style={{alignSelf: 'center', fontSize: 18, fontWeight: '500'}}>
+            No data found
+          </Text>
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 };

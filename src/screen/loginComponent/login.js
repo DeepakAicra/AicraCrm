@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   KeyboardAvoidingView,
   ScrollView,
@@ -23,8 +23,18 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [seePassword, setSeePassword] = useState(true);
   const [checkValidEmail, setCheckValidEmail] = useState(false);
-  const [userDataList, setUserDataList] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    checkAutoLogin();
+  }, []);
+
+  const checkAutoLogin = async () => {
+    const userId = await AsyncStorage.getItem('userId');
+    if (userId) {
+      navigation.navigate('DrawerStack');
+    }
+  };
 
   const handleCheckEmail = text => {
     let re = /\S+@\S+\.\S+/;

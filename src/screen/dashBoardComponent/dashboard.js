@@ -124,12 +124,14 @@ const Dashboard = () => {
                     Total Working Hours: {wrkHoursList[0].total_time}
                   </Text>
                 ) : null}
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('Attendance')}>
                   <Text
                     style={{
                       fontSize: 16,
                       fontWeight: 'bold',
                       color: '#06b6df',
+                      textDecorationLine: 'underline',
                     }}>
                     View Attendance
                   </Text>

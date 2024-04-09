@@ -21,7 +21,6 @@ export default styles = StyleSheet.create({
     height: 40,
     borderWidth: 1,
     borderRadius: 10,
-    // alignItems: 'center',
     justifyContent: 'center',
   },
   textInputStyle: {

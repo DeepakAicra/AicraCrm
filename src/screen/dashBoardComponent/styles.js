@@ -33,7 +33,7 @@ export default styles = StyleSheet.create({
   },
   titleView: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     margin: 5,
   },
 });

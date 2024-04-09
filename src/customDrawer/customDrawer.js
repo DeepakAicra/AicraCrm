@@ -378,7 +378,7 @@ const CustomDrawer = props => {
             )}
             onPress={() => {
               setFocus(1);
-              // props.navigation.navigate('nearByMatches');
+              props.navigation.navigate('Attendance');
             }}
           />
 
@@ -624,7 +624,7 @@ const CustomDrawer = props => {
               setFocus(1);
               // props.navigation.navigate('settings');
             }}
-          />
+          /> */}
           <DrawerItem
             // focused={focus == 1 ? true : false}
             pressColor={Colors.azure}
@@ -644,7 +644,7 @@ const CustomDrawer = props => {
               </Text>
             )}
             onPress={logout}
-          /> */}
+          />
         </View>
       </DrawerContentScrollView>
     </SafeAreaView>
