@@ -19,6 +19,7 @@ import GlobalSearch from '../screen/globalSearchComponent/globalSearch';
 import ConvertToLead from '../screen/convertToLead/convertToLead';
 import EditUpdateContact from '../screen/updateContactComponent/editUpdateContact';
 import Attendance from '../screen/attendanceComponent/attendance';
+import DailyReportSubmit from '../screen/dailyReportComponent/dailyReportSubmit';
 
 const Stack = createStackNavigator();
 
@@ -44,6 +45,7 @@ const AuthStack = () => {
       <Stack.Screen name="ConvertToLead" component={ConvertToLead} />
       <Stack.Screen name="EditUpdateContact" component={EditUpdateContact} />
       <Stack.Screen name="Attendance" component={Attendance} />
+      <Stack.Screen name="DailyReportSubmit" component={DailyReportSubmit} />
     </Stack.Navigator>
   );
 };

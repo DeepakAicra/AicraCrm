@@ -82,6 +82,7 @@ const Login = () => {
               'supervisor_id',
               response.data.message.supervisor_id,
             );
+            AsyncStorage.setItem('companyId', response.data.message.company_id);
             navigation.navigate('DrawerStack');
           }
         })
@@ -112,7 +113,7 @@ const Login = () => {
               placeholderTextColor={'white'}
               value={email}
               onChangeText={text => handleCheckEmail(text)}
-              keyboardType={'email-address'}
+              keyboardType={'default'}
               autoCapitalize="none"
               style={styles.textInputStyle}
             />

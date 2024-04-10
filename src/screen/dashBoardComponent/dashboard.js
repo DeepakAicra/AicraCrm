@@ -150,7 +150,7 @@ const Dashboard = () => {
                 )}
               </ScrollView> */}
               <ScrollView horizontal>
-                <WebClockSquare title="Clock In Time" />
+                <WebClockSquare title="Clock Time" />
                 {dataList ? (
                   <Square title="Today Lead" value={dataList.Today_Lead} />
                 ) : null}

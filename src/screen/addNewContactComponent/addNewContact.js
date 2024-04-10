@@ -75,7 +75,7 @@ const AddNewContact = ({navigation}) => {
             },
           ]);
         } else {
-          Alert.alert('Sorry! Details Saved.');
+          Alert.alert('Sorry! Details not Saved.');
         }
       })
       .catch(error => {
