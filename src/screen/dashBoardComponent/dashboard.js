@@ -121,7 +121,7 @@ const Dashboard = () => {
                   </View>
                 ) : wrkHoursList && wrkHoursList.length > 0 ? (
                   <Text style={{fontSize: 16, fontWeight: 500, color: 'white'}}>
-                    Total Working Hours: {wrkHoursList[0].total_time}
+                    Total WH: {wrkHoursList[0].total_time}
                   </Text>
                 ) : null}
                 <TouchableOpacity
@@ -150,7 +150,7 @@ const Dashboard = () => {
                 )}
               </ScrollView> */}
               <ScrollView horizontal>
-                <WebClockSquare title="Clock Time" />
+                <WebClockSquare />
                 {dataList ? (
                   <Square title="Today Lead" value={dataList.Today_Lead} />
                 ) : null}

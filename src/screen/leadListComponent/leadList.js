@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, ActivityIndicator, Text, ScrollView} from 'react-native';
+import {View, ActivityIndicator, Text, ScrollView, Linking} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {API_URL} from '../../config';
@@ -45,6 +45,18 @@ const LeadList = ({navigation}) => {
     fetchData();
   }, [empId]);
 
+  const handleCall = mobileNumber => {
+    Linking.openURL(`tel:${mobileNumber}`);
+  };
+
+  const handleSendMail = emailAddress => {
+    Linking.openURL(`mailto:${emailAddress}`);
+  };
+
+  const handleWhatsApp = mobileNumber => {
+    Linking.openURL(`whatsapp://send?text=hello&phone=${mobileNumber}`);
+  };
+
   return (
     <View style={styles.container}>
       <Header
@@ -64,6 +76,9 @@ const LeadList = ({navigation}) => {
               title={item.Entity_Name}
               mobile={item.Mobile_Number}
               email={item.Email}
+              call={() => handleCall(item.phoneno)}
+              sendMail={() => handleSendMail(item.email)}
+              whatsApp={() => handleWhatsApp(item.phoneno)}
             />
           ))
         )}

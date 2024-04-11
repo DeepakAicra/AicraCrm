@@ -13,8 +13,8 @@ const Square = ({title, value}) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#054761',
-    height: 140,
-    width: 120,
+    height: 120,
+    width: 110,
     margin: 8,
     elevation: 10,
     borderRadius: 10,
@@ -24,8 +24,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '400',
     textAlign: 'center',
+    alignSelf: 'auto',
     color: '#fff',
     marginVertical: 5,
+    marginHorizontal: 5
   },
 });
 export default Square;

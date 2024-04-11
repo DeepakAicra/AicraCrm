@@ -30,7 +30,7 @@ const DailyReportSubmit = ({navigation}) => {
   const [companyId, setCompanyId] = useState('');
   const [name, setName] = useState('');
 
-  // console.log(companyId);
+  // console.log(inTime);
   const getUserData = async () => {
     const value = await AsyncStorage.getItem('userId');
     const companyValue = await AsyncStorage.getItem('companyId');
@@ -223,14 +223,13 @@ const DailyReportSubmit = ({navigation}) => {
               />
             </View>
           </View>
-          <Text style={styles.titleStyle}>Total Time: 0 hrs 27 min 6 sec</Text>
+          <Text style={styles.titleStyle}>Total Time: 0 hrs 00 min 00 sec</Text>
           <View style={styles.selectedItemView}>
             <Text style={styles.titleTextBox}>Full Day Work Remarks: *</Text>
             <View style={styles.multiLineView}>
               <TextInput
                 multiline
-                numberOfLines={3}
-                maxLength={40}
+                numberOfLines={2}
                 placeholder="Remarks"
                 value={remarks}
                 onChangeText={setRemarks}

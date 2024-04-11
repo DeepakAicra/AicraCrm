@@ -14,7 +14,7 @@ export default styles = StyleSheet.create({
   },
   textInputContainer: {
     width: '100%',
-    height: 45,
+    height: 40,
     borderColor: 'black',
     borderWidth: 1,
     borderRadius: 10,
@@ -24,6 +24,7 @@ export default styles = StyleSheet.create({
   textInputStyle: {
     width: '100%',
     color: 'grey',
+    marginHorizontal: 5
   },
   selectedItemView: {
     marginVertical: 5,

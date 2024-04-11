@@ -84,11 +84,16 @@ const Login = () => {
             );
             AsyncStorage.setItem('companyId', response.data.message.company_id);
             navigation.navigate('DrawerStack');
+          } else {
+            // Display error message here
+            Alert.alert(response.data.message);
           }
         })
         .catch(error => {
           setLoading(false);
           console.log(error);
+          // Display generic error message for network issues or server errors
+          Alert.alert('An error occurred. Please try again later.');
         });
     } else {
       setLoading(false);

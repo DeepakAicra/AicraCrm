@@ -40,6 +40,7 @@ const AddNewAccount = ({navigation}) => {
   const [country, setCountry] = useState('');
   const [countryList, setCountryList] = useState([]);
   const [countryId, setCountryId] = useState();
+  const [searchQuery, setSearchQuery] = useState('');
   const [state, setState] = useState('');
   const [stateList, setStateList] = useState([]);
   const [stateId, setStateId] = useState();
@@ -166,6 +167,13 @@ const AddNewAccount = ({navigation}) => {
         })
         .catch(error => console.log(error));
     }
+  };
+
+  const handleSearch = () => {
+    const filtered = countryList.filter(
+      c => c.name.toLowerCase().indexOf(searchQuery.toLowerCase()) !== -1,
+    );
+    setCountryList(filtered);
   };
 
   const toggleStateModal = () => {
@@ -531,6 +539,18 @@ const AddNewAccount = ({navigation}) => {
                   <View style={styles.modalContent}>
                     <View style={styles.headerView}>
                       <Text style={styles.headerText}>Select Country</Text>
+                    </View>
+                    <View style={{margin: 10}}>
+                      <TextInput
+                        placeholder="Search by country name"
+                        placeholderTextColor="grey"
+                        value={searchQuery}
+                        onChangeText={text => {
+                          setSearchQuery(text);
+                          handleSearch();
+                        }}
+                        style={styles.searchInputStyle}
+                      />
                     </View>
                     <ScrollView>
                       {countryList?.map((c, i) => {

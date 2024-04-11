@@ -89,6 +89,13 @@ export default styles = StyleSheet.create({
     fontSize: 16,
     marginVertical: 7,
   },
+  searchInputStyle: {
+    width: '100%',
+    height: 40,
+    borderColor: 'black',
+    borderWidth: 0.5,
+    borderRadius: 10,
+  },
   addMoreButtonView: {
     flexDirection: 'row',
     justifyContent: 'flex-end',

@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   ScrollView,
   SafeAreaView,
+  Linking,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import styles from './styles';
@@ -26,6 +27,7 @@ const FollowUps = ({navigation}) => {
   const [empId, setEmpId] = useState('');
   const [followInfoList, setFollowInfoList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showAllEntries, setShowAllEntries] = useState(false);
 
   const toggleFromDatePicker = () => {
     setFromShowPicker(!fromShowPicker);
@@ -107,6 +109,22 @@ const FollowUps = ({navigation}) => {
 
     getUserData();
   }, []);
+
+  const handleLeadEntriesPress = () => {
+    setShowAllEntries(true);
+  };
+
+  const handleCall = mobileNumber => {
+    Linking.openURL(`tel:${mobileNumber}`);
+  };
+
+  const handleSendMail = emailAddress => {
+    Linking.openURL(`mailto:${emailAddress}`);
+  };
+
+  const handleWhatsApp = mobileNumber => {
+    Linking.openURL(`whatsapp://send?text=hello&phone=${mobileNumber}`);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -242,18 +260,30 @@ const FollowUps = ({navigation}) => {
         {loading ? (
           <ActivityIndicator size="large" color="#e61789" />
         ) : followInfoList && followInfoList.length > 0 ? (
-          followInfoList.map((item, index) => (
-            <TableCard
-              key={index}
-              title={item.Entity_Name}
-              mobile={item.Mobile_Number}
-              email={item.Email}
-            />
-          ))
+          followInfoList
+            .slice(0, showAllEntries ? followInfoList.length : 10)
+            .map((item, index) => (
+              <TableCard
+                key={index}
+                title={item.Entity_Name}
+                mobile={item.Mobile_Number}
+                email={item.Email}
+                call={() => handleCall(item.phoneno)}
+                sendMail={() => handleSendMail(item.email)}
+                whatsApp={() => handleWhatsApp(item.phoneno)}
+              />
+            ))
         ) : (
           <Text style={{alignSelf: 'center', fontSize: 18, fontWeight: '500'}}>
             No data found
           </Text>
+        )}
+        {!showAllEntries && (
+          <TouchableOpacity
+            style={styles.seeMoreTouch}
+            onPress={handleLeadEntriesPress}>
+            <Text style={styles.seeMoreTxt}>See More...</Text>
+          </TouchableOpacity>
         )}
       </ScrollView>
     </SafeAreaView>

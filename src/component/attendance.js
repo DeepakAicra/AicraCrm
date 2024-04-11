@@ -23,10 +23,10 @@ const AttendanceCard = ({
           <Text style={styles.name}>Name: {name}</Text>
           <Text style={styles.clock_in}>{`Clock In: ${clock_in}`}</Text>
           <Text style={styles.clock_out}>{`Clock Out: ${clock_out}`}</Text>
-          {/* <Text style={styles.working_hours}>
+          <Text style={styles.working_hours}>
             Working Hours: {working_hours}
-          </Text> */}
-          <Text style={styles.remarks}>
+          </Text>
+          <Text style={styles.remarks} numberOfLines={1}>
             Remarks: {remarks}
           </Text>
         </View>

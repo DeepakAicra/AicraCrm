@@ -14,7 +14,7 @@ import axios from 'axios';
 import {API_URL} from '../../config';
 import {useNavigation} from '@react-navigation/native';
 
-const WebClockSquare = ({title}) => {
+const WebClockSquare = () => {
   const navigation = useNavigation();
   const [showClock, setShowClock] = useState(false);
   const [time, setTime] = useState('');
@@ -23,6 +23,7 @@ const WebClockSquare = ({title}) => {
   const [ipAddress, setIpAddress] = useState('');
   const [empId, setEmpId] = useState('');
   const [companyId, setCompanyId] = useState('');
+  const [clockActionsCompleted, setClockActionsCompleted] = useState(false); // State to track if both clock-in and clock-out are done
 
   useEffect(() => {
     const getPermissions = async () => {
@@ -80,7 +81,11 @@ const WebClockSquare = ({title}) => {
   }, [showClock]);
 
   const updateTime = () => {
-    const currentTime = new Date().toLocaleTimeString();
+    const options = {hour12: false};
+    const currentTime = new Date().toLocaleTimeString('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      ...options,
+    });
     setTime(currentTime);
   };
 
@@ -126,6 +131,10 @@ const WebClockSquare = ({title}) => {
           } else {
             console.log('Clock-in action performed, not navigating.');
           }
+          // Check if both clock actions are completed
+          if (showClock) {
+            setClockActionsCompleted(true);
+          }
         } else {
           Alert.alert(`Clock-${showClock ? 'out' : 'in'} not saved`);
         }
@@ -146,13 +155,21 @@ const WebClockSquare = ({title}) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.txtStyle}>{title}</Text>
-      {showClock && <Text style={styles.txtStyle}>{time}</Text>}
-      <TouchableOpacity style={styles.button} onPress={handlePress}>
-        <Text style={styles.buttonText}>
-          {showClock ? 'Clock Out' : 'Clock In'}
+      {clockActionsCompleted ? ( // Show message if both clock-in and clock-out are done
+        <Text style={styles.completedMessage}>
+          You have logged in and logged out both
         </Text>
-      </TouchableOpacity>
+      ) : (
+        <>
+          <Text style={styles.txtStyle}>Clock Time</Text>
+          {showClock && <Text style={styles.txtStyle}>🕒 {time}</Text>}
+          <TouchableOpacity style={styles.button} onPress={handlePress}>
+            <Text style={styles.buttonText}>
+              {showClock ? 'Clock Out' : 'Clock In'}
+            </Text>
+          </TouchableOpacity>
+        </>
+      )}
     </View>
   );
 };
@@ -160,8 +177,8 @@ const WebClockSquare = ({title}) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#054761',
-    height: 140,
-    width: 120,
+    height: 120,
+    width: 110,
     margin: 8,
     elevation: 10,
     borderRadius: 10,
@@ -176,18 +193,26 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '65%',
-    height: 30,
+    height: 25,
     backgroundColor: '#49be25',
     borderRadius: 5,
     justifyContent: 'center',
     elevation: 3,
     marginHorizontal: 20,
+    marginVertical: 5,
   },
   buttonText: {
     fontSize: 12,
     color: '#ecf4ff',
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  completedMessage: {
+    fontSize: 14,
+    color: '#fff',
+    textAlign: 'center',
+    marginTop: 10,
+    marginHorizontal: 5,
   },
 });
 
