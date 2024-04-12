@@ -7,6 +7,7 @@ import {
   ScrollView,
   Linking,
   ActivityIndicator,
+  Pressable
 } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -138,24 +139,14 @@ const Contact = ({navigation}) => {
               <>
                 {showAllEntries
                   ? tableList.map((item, index) => (
-                      <TableCard
+                      <Pressable
                         key={index}
-                        title={item.name}
-                        mobile={item.phoneno}
-                        email={item.email}
-                        edit={() =>
-                          navigation.navigate('EditUpdateContact', {item})
-                        }
-                        call={() => handleCall(item.phoneno)}
-                        sendMail={() => handleSendMail(item.email)}
-                        whatsApp={() => handleWhatsApp(item.phoneno)}
-                      />
-                    ))
-                  : tableList
-                      .slice(0, 10)
-                      .map((item, index) => (
+                        onPress={() =>
+                          navigation.navigate('ContactSelectedDetails', {
+                            selectedItem: item,
+                          })
+                        }>
                         <TableCard
-                          key={index}
                           title={item.name}
                           mobile={item.phoneno}
                           email={item.email}
@@ -166,7 +157,29 @@ const Contact = ({navigation}) => {
                           sendMail={() => handleSendMail(item.email)}
                           whatsApp={() => handleWhatsApp(item.phoneno)}
                         />
-                      ))}
+                      </Pressable>
+                    ))
+                  : tableList.slice(0, 10).map((item, index) => (
+                      <Pressable
+                        key={index}
+                        onPress={() =>
+                          navigation.navigate('ContactSelectedDetails', {
+                            selectedItem: item,
+                          })
+                        }>
+                        <TableCard
+                          title={item.name}
+                          mobile={item.phoneno}
+                          email={item.email}
+                          edit={() =>
+                            navigation.navigate('EditUpdateContact', {item})
+                          }
+                          call={() => handleCall(item.phoneno)}
+                          sendMail={() => handleSendMail(item.email)}
+                          whatsApp={() => handleWhatsApp(item.phoneno)}
+                        />
+                      </Pressable>
+                    ))}
               </>
             )}
             <TouchableOpacity

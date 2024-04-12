@@ -7,6 +7,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Linking,
+  Pressable,
 } from 'react-native';
 import styles from './styles';
 import Header from '../../component/generalHeader/header';
@@ -61,7 +62,7 @@ const Account = ({navigation}) => {
   };
 
   const handleAccountListResponse = response => {
-    if (response.data.status === true) {
+    if (response.data.status) {
       setTableList(response.data.account_data);
     } else {
       console.log('Error in account list response:', response.data.error);
@@ -137,9 +138,7 @@ const Account = ({navigation}) => {
               )}
             </ScrollView>
             <View style={styles.titleView}>
-              <Text style={styles.accountList}>
-                Account List
-              </Text>
+              <Text style={styles.accountList}>Account List</Text>
             </View>
             {loading ? (
               <View style={styles.loadingContainer}>
@@ -147,40 +146,67 @@ const Account = ({navigation}) => {
               </View>
             ) : (
               <>
-                {showAllEntries
-                  ? tableList.map((item, index) => (
-                      <TableCard
-                        key={index}
-                        title={item.Entity_Name}
-                        mobile={item.Mobile_Number}
-                        email={item.Email}
-                        call={() => handleCall(item.Mobile_Number)}
-                        sendMail={() => handleSendMail(item.Email)}
-                        whatsApp={() => handleWhatsApp(item.Mobile_Number)}
-                      />
-                    ))
-                  : tableList
-                      .slice(0, 10)
-                      .map((item, index) => (
-                        <TableCard
-                          key={index}
-                          title={item.Entity_Name}
-                          mobile={item.Mobile_Number}
-                          email={item.Email}
-                          call={() => handleCall(item.Mobile_Number)}
-                          sendMail={() => handleSendMail(item.Email)}
-                          whatsApp={() => handleWhatsApp(item.Mobile_Number)}
-                        />
-                      ))}
+                {tableList.length > 0 ? (
+                  <>
+                    {showAllEntries
+                      ? tableList.map((item, index) => (
+                          <Pressable
+                            key={index}
+                            onPress={() =>
+                              navigation.navigate('AccountSelectedDetails', {
+                                selectedItem: item,
+                              })
+                            }>
+                            <TableCard
+                              title={item.Entity_Name}
+                              mobile={item.Mobile_Number}
+                              email={item.Email}
+                              call={() => handleCall(item.Mobile_Number)}
+                              sendMail={() => handleSendMail(item.Email)}
+                              whatsApp={() =>
+                                handleWhatsApp(item.Mobile_Number)
+                              }
+                            />
+                          </Pressable>
+                        ))
+                      : tableList.slice(0, 10).map((item, index) => (
+                          <Pressable
+                            key={index}
+                            onPress={() =>
+                              navigation.navigate('AccountSelectedDetails', {
+                                selectedItem: item,
+                              })
+                            }>
+                            <TableCard
+                              title={item.Entity_Name}
+                              mobile={item.Mobile_Number}
+                              email={item.Email}
+                              call={() => handleCall(item.Mobile_Number)}
+                              sendMail={() => handleSendMail(item.Email)}
+                              whatsApp={() =>
+                                handleWhatsApp(item.Mobile_Number)
+                              }
+                            />
+                          </Pressable>
+                        ))}
+                  </>
+                ) : (
+                  <Text
+                    style={{
+                      alignSelf: 'center',
+                      fontSize: 18,
+                      fontWeight: '500',
+                      color: 'red',
+                    }}>
+                    No data found
+                  </Text>
+                )}
               </>
             )}
             <TouchableOpacity
               style={styles.seeMoreTouch}
               onPress={handleLeadEntriesPress}>
-              <Text
-                style={styles.seeMoreTxt}>
-                See More...
-              </Text>
+              <Text style={styles.seeMoreTxt}>See More...</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

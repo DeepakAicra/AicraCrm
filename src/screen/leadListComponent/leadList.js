@@ -1,5 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import {View, ActivityIndicator, Text, ScrollView, Linking} from 'react-native';
+import {
+  View,
+  ActivityIndicator,
+  Text,
+  ScrollView,
+  Linking,
+  TouchableOpacity,
+  Pressable,
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {API_URL} from '../../config';
@@ -11,23 +19,27 @@ const LeadList = ({navigation}) => {
   const [empId, setEmpId] = useState('');
   const [leadDataList, setLeadDataList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showAllEntries, setShowAllEntries] = useState(false);
 
   useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const value = await AsyncStorage.getItem('userId');
+        if (value !== null) {
+          setEmpId(value);
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
     getUserData();
   }, []);
 
-  const getUserData = async () => {
-    const value = await AsyncStorage.getItem('userId');
-    setEmpId(value);
-  };
-
   useEffect(() => {
-    const fetchData = async () => {
-      let formData = new FormData();
-      formData.append('empid', empId);
+    const fetchLeadData = async () => {
       try {
-        const response = await axios.get(API_URL + 'Lead_List', {
-          data: formData,
+        const response = await axios.get(`${API_URL}Lead_List?empid=${empId}`, {
           headers: {
             Accept: 'application/json',
             'Content-Type': 'multipart/form-data',
@@ -37,13 +49,20 @@ const LeadList = ({navigation}) => {
           setLeadDataList(response.data.lead_data);
         }
       } catch (error) {
-        console.log(error);
+        console.error('Error fetching lead data:', error);
       } finally {
         setLoading(false);
       }
     };
-    fetchData();
+
+    if (empId) {
+      fetchLeadData();
+    }
   }, [empId]);
+
+  const handleLeadEntriesPress = () => {
+    setShowAllEntries(true);
+  };
 
   const handleCall = mobileNumber => {
     Linking.openURL(`tel:${mobileNumber}`);
@@ -69,18 +88,38 @@ const LeadList = ({navigation}) => {
       <ScrollView>
         {loading ? (
           <ActivityIndicator size="large" color="#e61789" />
+        ) : leadDataList && leadDataList.length > 0 ? (
+          leadDataList
+            .slice(0, showAllEntries ? leadDataList.length : 10)
+            .map((item, index) => (
+              <Pressable
+                key={index}
+                onPress={() =>
+                  navigation.navigate('LeadListSelectedDetails', {
+                    selectedItem: item,
+                  })
+                }>
+                <TableCard
+                  title={item.Entity_Name}
+                  mobile={item.Mobile_Number}
+                  email={item.Email}
+                  call={() => handleCall(item.phoneno)}
+                  sendMail={() => handleSendMail(item.email)}
+                  whatsApp={() => handleWhatsApp(item.phoneno)}
+                />
+              </Pressable>
+            ))
         ) : (
-          leadDataList.map((item, index) => (
-            <TableCard
-              key={index}
-              title={item.Entity_Name}
-              mobile={item.Mobile_Number}
-              email={item.Email}
-              call={() => handleCall(item.phoneno)}
-              sendMail={() => handleSendMail(item.email)}
-              whatsApp={() => handleWhatsApp(item.phoneno)}
-            />
-          ))
+          <Text style={{alignSelf: 'center', fontSize: 18, fontWeight: '500'}}>
+            No data found
+          </Text>
+        )}
+        {!showAllEntries && (
+          <TouchableOpacity
+            style={styles.seeMoreTouch}
+            onPress={handleLeadEntriesPress}>
+            <Text style={styles.seeMoreTxt}>See More...</Text>
+          </TouchableOpacity>
         )}
       </ScrollView>
     </View>

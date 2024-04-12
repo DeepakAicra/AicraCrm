@@ -20,6 +20,10 @@ import ConvertToLead from '../screen/convertToLead/convertToLead';
 import EditUpdateContact from '../screen/updateContactComponent/editUpdateContact';
 import Attendance from '../screen/attendanceComponent/attendance';
 import DailyReportSubmit from '../screen/dailyReportComponent/dailyReportSubmit';
+import FollowUpSelectedDetails from '../screen/followUpSelectedDetailsComponent/folloupSelectedDetails';
+import AccountSelectedDetails from '../screen/accountSelectedDetailsComponent/accountSelectedDetails';
+import ContactSelectedDetails from '../screen/contactSelectedDetailsComponent/contactSelectedDetails';
+import LeadListSelectedDetails from '../screen/LeadListSelectedDetailsComponent/leadListSelectedDetails';
 
 const Stack = createStackNavigator();
 
@@ -46,6 +50,22 @@ const AuthStack = () => {
       <Stack.Screen name="EditUpdateContact" component={EditUpdateContact} />
       <Stack.Screen name="Attendance" component={Attendance} />
       <Stack.Screen name="DailyReportSubmit" component={DailyReportSubmit} />
+      <Stack.Screen
+        name="FollowUpSelectedDetails"
+        component={FollowUpSelectedDetails}
+      />
+      <Stack.Screen
+        name="AccountSelectedDetails"
+        component={AccountSelectedDetails}
+      />
+      <Stack.Screen
+        name="ContactSelectedDetails"
+        component={ContactSelectedDetails}
+      />
+      <Stack.Screen
+        name="LeadListSelectedDetails"
+        component={LeadListSelectedDetails}
+      />
     </Stack.Navigator>
   );
 };

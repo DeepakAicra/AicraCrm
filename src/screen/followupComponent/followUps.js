@@ -263,15 +263,22 @@ const FollowUps = ({navigation}) => {
           followInfoList
             .slice(0, showAllEntries ? followInfoList.length : 10)
             .map((item, index) => (
-              <TableCard
+              <Pressable
                 key={index}
-                title={item.Entity_Name}
-                mobile={item.Mobile_Number}
-                email={item.Email}
-                call={() => handleCall(item.phoneno)}
-                sendMail={() => handleSendMail(item.email)}
-                whatsApp={() => handleWhatsApp(item.phoneno)}
-              />
+                onPress={() =>
+                  navigation.navigate('FollowUpSelectedDetails', {
+                    selectedItem: item,
+                  })
+                }>
+                <TableCard
+                  title={item.Entity_Name}
+                  mobile={item.Mobile_Number}
+                  email={item.Email}
+                  call={() => handleCall(item.phoneno)}
+                  sendMail={() => handleSendMail(item.email)}
+                  whatsApp={() => handleWhatsApp(item.phoneno)}
+                />
+              </Pressable>
             ))
         ) : (
           <Text style={{alignSelf: 'center', fontSize: 18, fontWeight: '500'}}>
