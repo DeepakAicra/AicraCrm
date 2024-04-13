@@ -16,7 +16,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {API_URL} from '../../config';
-import TableCard from '../../component/tableCards';
+import TableCard from '../../component/tableCard/tableCards';
 
 const FollowUps = ({navigation}) => {
   const [fromDate, setFromDate] = useState();

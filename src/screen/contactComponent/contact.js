@@ -13,7 +13,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../../component/generalHeader/header';
 import Square from '../../component/cards/cards';
-import TableCard from '../../component/tableCards';
+import TableCard from '../../component/tableCard/tableCards';
 import styles from './styles';
 import {API_URL} from '../../config';
 

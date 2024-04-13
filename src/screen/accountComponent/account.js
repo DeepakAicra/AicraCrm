@@ -15,7 +15,7 @@ import Square from '../../component/cards/cards';
 import axios from 'axios';
 import {API_URL} from '../../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import TableCard from '../../component/tableCards';
+import TableCard from '../../component/tableCard/tableCards';
 
 const Account = ({navigation}) => {
   const [empId, setEmpId] = useState('');

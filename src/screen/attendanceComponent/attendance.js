@@ -11,7 +11,7 @@ import axios from 'axios';
 import {API_URL} from '../../config';
 import styles from './styles';
 import Header from '../../component/generalHeader/header';
-import AttendanceCard from '../../component/attendance';
+import AttendanceCard from '../../component/attendanceCard/attendance';
 
 const Attendance = ({navigation}) => {
   const [empId, setEmpId] = useState('');

@@ -90,13 +90,12 @@ const AddNewAccount = ({navigation}) => {
     getUserData();
   }, []);
 
-  // const handleSearch = async () => {
+  // const searchByName = async () => {
   //   try {
   //     const response = await axios.get(
-  //       `${API_URL}/Find_Account?Account_Name=${name}`,
+  //       `${API_URL}/Find_Account?Account_Name=${empId}`,
   //     );
   //     console.log(response.data);
-  //     setName('');
   //   } catch (error) {
   //     Alert.alert('Error', 'Failed to fetch data');
   //     console.error(error);

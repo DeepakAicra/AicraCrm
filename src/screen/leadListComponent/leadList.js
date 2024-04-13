@@ -13,7 +13,7 @@ import axios from 'axios';
 import {API_URL} from '../../config';
 import styles from './styles';
 import Header from '../../component/generalHeader/header';
-import TableCard from '../../component/tableCards';
+import TableCard from '../../component/tableCard/tableCards';
 
 const LeadList = ({navigation}) => {
   const [empId, setEmpId] = useState('');
